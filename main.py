@@ -11,15 +11,13 @@ app.add_middleware(
     allow_origins=[
         "http://127.0.0.1:5173",
         "http://localhost:5173",
-        "https://*.vercel.app",   # allow your deployed frontend
+        "https://*.vercel.app",   
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-app = FastAPI(title="Blarney API (MySQL)")
 
 @app.get("/")
 def home():
