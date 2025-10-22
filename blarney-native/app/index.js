@@ -14,16 +14,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#0f584d", // dark green background
+    backgroundColor: "#0f584d",
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#ffffff", // white text
+    color: "#fff",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 22,
-    color: "#ffffff",
+    color: "#fff",
   },
 });
