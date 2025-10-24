@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "mysql+mysqlconnector://blarney_user:ChangeMe!@127.0.0.1:3306/blarney"
+DATABASE_URL = "mysql+mysqlconnector://blarney_user:blarney1446@127.0.0.1:3306/blarney"
 
 engine = create_engine(DATABASE_URL, future=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
