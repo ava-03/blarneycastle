@@ -1,13 +1,6 @@
 /**
  * app/(tabs)/index.tsx
- * ------------------------------------------------------------
- * Blarney Castle Visitor App - Home Screen (Visitor-safe)
- * ------------------------------------------------------------
- * - No developer/error messages shown to visitors.
- * - If backend is unavailable, we silently show safe defaults (N/A).
- * - Background retry every 30s to refresh data when connection returns.
- * - Tapping "GET TICKETS HERE" opens the URL even if offline.
- * ------------------------------------------------------------
+ * Home (visitor-safe)
  */
 
 import React, { useEffect, useRef, useState } from "react";
@@ -22,76 +15,67 @@ import {
   ActivityIndicator,
   StatusBar,
   RefreshControl,
+  Image,
+  Platform,
 } from "react-native";
-import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";  
+import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";
 import { colors } from "../../constants/colors";
-import SlideMenu from "../../components/slidemenu";           
+import SlideMenu from "../../components/slidemenu";
 import { router, type Href } from "expo-router";
 
-
-
-/** Toggle this to true ONLY while developing if you want to see status text. */
 const SHOW_DEV_STATUS = false;
 
 export default function HomeScreen() {
-  const [loading, setLoading] = useState(true);              // first load spinner
-  const [refreshing, setRefreshing] = useState(false);       // pull-to-refresh spinner
-  const [data, setData] = useState<HomeStatus | null>(null); // latest data (or null on failure)
-  const [menuOpen, setMenuOpen] = useState(false);           // slide-out menu visibility
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [data, setData] = useState<HomeStatus | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const HEADER_HEIGHT = 88;
-
-  // store an interval id so we can clear it if screen unmounts
+  const HEADER_HEIGHT = 104;
   const retryIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // -- Helper: open the tickets URL in the device browser --
   const openTicketLink = async (url: string) => {
     const ok = await Linking.canOpenURL(url);
     if (ok) await Linking.openURL(url);
   };
 
-  // -- Fetch function used by first load, pull-to-refresh, and silent retries --
   const load = async () => {
     try {
-      await ping(); // If this throws, we skip updating 'data' and keep previous values
+      await ping();
       const res = await fetchHomeStatus();
       setData(res);
     } catch {
-      // Intentionally silent: no alerts, no banners, no console noise in production
-      // We leave `data` as is; UI will show N/A if null.
+      // silent (visitor-safe)
     }
   };
 
-  // -- First load + start a quiet background retry every 30s --
   useEffect(() => {
     (async () => {
       await load();
       setLoading(false);
     })();
-
-    // quiet background refresh
     retryIntervalRef.current = setInterval(load, 30_000);
-
     return () => {
       if (retryIntervalRef.current) clearInterval(retryIntervalRef.current);
     };
   }, []);
 
-  // -- Pull-to-refresh handler (manual refresh by user) --
   const onRefresh = async () => {
     setRefreshing(true);
     await load();
     setRefreshing(false);
   };
 
-  // Safe fallbacks if backend hasn't provided data yet
-  const ticketsUrl = data?.tickets_url ?? "https://blarneycastle.ie/gardens/";
+  // ---- values for UI (safe fallbacks) ----
+  const ticketsUrl =
+    data?.tickets_url ??
+    "https://blarneycastle.retailint-tickets.com/Event/GENERALADM";
   const queue = data ? `${data.castle_queue_wait_mins} mins` : "N/A";
   const carpark = data?.car_park_status ?? "N/A";
   const closing = data?.closing_time ?? "N/A";
   const last = data?.last_admission ?? "N/A";
 
-  // Small reusable "pill" component
+  // small pill component
   const Pill = ({
     title,
     value,
@@ -116,7 +100,6 @@ export default function HomeScreen() {
     </Pressable>
   );
 
-  // First-load spinner (shows briefly on cold start)
   if (loading) {
     return (
       <View style={[styles.container, styles.center]}>
@@ -127,97 +110,146 @@ export default function HomeScreen() {
   }
 
   return (
-  <SafeAreaView style={{ flex: 1, backgroundColor: colors.brand }}>
-    <StatusBar barStyle="light-content" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.brand }}>
+      <StatusBar barStyle="light-content" />
 
-    {/* Header band: centered HOME + hamburger on right */}
-    <View style={[styles.header, { height: HEADER_HEIGHT }]}>
-      {/* left spacer so title stays centered */}
-      <View style={{ width: 40, height: 30 }} />
-      <Text style={styles.headerText}>HOME</Text>
-      <Pressable
-        accessibilityLabel="Open menu"
-        onPress={() => setMenuOpen(true)}
-        style={styles.burger}
+      {/* Header: logo (left) + two-line title (center) + hamburger (right) */}
+      <View style={[styles.header, { height: HEADER_HEIGHT }]}>
+        <View style={styles.headerSide}>
+          <Image
+            source={require("../../assets/images/blarney-logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
+
+        <View style={styles.titleContainer}>
+          <Text style={styles.headerTitle}>Blarney Castle</Text>
+          <Text style={styles.headerSubtitle}>& Gardens</Text>
+        </View>
+
+        <Pressable
+          accessibilityLabel="Open menu"
+          onPress={() => setMenuOpen(true)}
+          style={styles.headerSide}
+        >
+          <View style={styles.burger}>
+            <View style={styles.line} />
+            <View style={styles.line} />
+            <View style={styles.line} />
+          </View>
+        </Pressable>
+      </View>
+
+      {SHOW_DEV_STATUS ? (
+        <Text style={styles.devStatus}>
+          {data ? "Backend: connected" : "Backend: offline"}
+        </Text>
+      ) : null}
+
+      <ScrollView
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl
+            tintColor={colors.textLight}
+            colors={[colors.textLight]}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
-        <View style={styles.line} />
-        <View style={styles.line} />
-        <View style={styles.line} />
-      </Pressable>
-    </View>
-
-    {/* (Optional) Dev-only connection hint */}
-    {SHOW_DEV_STATUS ? (
-      <Text style={styles.devStatus}>
-        {data ? "Backend: connected" : "Backend: offline"}
-      </Text>
-    ) : null}
-
-    {/* Content with pull-to-refresh; silent if backend down */}
-    <ScrollView
-      contentContainerStyle={styles.content}
-      refreshControl={
-        <RefreshControl
-          tintColor={colors.textLight}
-          colors={[colors.textLight]}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
+        <Pill
+          title="GET TICKETS HERE:"
+          value="Click to Open"
+          onPress={() => openTicketLink(ticketsUrl)}
         />
-      }
-    >
-      <Pill
-        title="GET TICKETS HERE:"
-        value="Click to Open"
-        onPress={() => openTicketLink(ticketsUrl)}
-      />
-      <Pill title="CASTLE QUEUE WAIT:" value={queue} />
-      <Pill title="CAR PARK STATUS:" value={carpark} />
-      <Pill title="CLOSING TIME:" value={closing} />
-      <Pill title="LAST ADMISSION:" value={last} />
-    </ScrollView>
+        <Pill title="CASTLE QUEUE WAIT:" value={queue} />
+        <Pill title="CAR PARK STATUS:" value={carpark} />
+        <Pill title="CLOSING TIME:" value={closing} />
+        <Pill title="LAST ADMISSION:" value={last} />
+      </ScrollView>
 
-    <SlideMenu
-      visible={menuOpen}
-      onClose={() => setMenuOpen(false)}
-      onSelect={(label: string) => {
-        const path: Record<string, Href> = {
-          HOME: "/",
-          NAVIGATION: "../navigation",
-          INFO: "../info",
-          NATURE: "../nature",
-          "AUDIO TOUR": "../audio",
-          PHOTOS: "../photos",
-        };
-        router.push(path[label] ?? "/");
-        setMenuOpen(false);
-      }}
-    />
-  </SafeAreaView>
+      <SlideMenu
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onSelect={(label: string) => {
+          const path: Record<string, Href> = {
+            HOME: "/" as Href,
+            NAVIGATION: "../navigation" as Href,
+            INFO: "../info" as Href,
+            NATURE: "../nature" as Href,
+            "AUDIO TOUR": "../audio" as Href,
+            PHOTOS: "../photos" as Href,
+          };
+          router.push(path[label] ?? ("/" as Href));
+          setMenuOpen(false);
+        }}
+      />
+    </SafeAreaView>
   );
 }
 
+const serif = Platform.select({ ios: "Times New Roman", android: "serif" });
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.brand }, // not used as root anymore
+  // containers
+  container: { flex: 1, backgroundColor: colors.brand },
   center: { justifyContent: "center", alignItems: "center" },
 
+  // header
   header: {
     backgroundColor: colors.brand,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
-    // height provided inline from HEADER_HEIGHT
+    paddingHorizontal: 12,
   },
-  headerText: { color: colors.textLight, fontSize: 28, fontWeight: "800", letterSpacing: 0.5 },
-
-  burger: {
-    width: 40,
-    height: 30,
+  headerSide: {
+    width: 56,
+    height: "100%",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
   },
-  line: { width: 26, height: 3, backgroundColor: colors.textLight, borderRadius: 2 },
+  logo: { width: 60, height: 60 },
 
+  titleContainer: {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+headerTitle: {
+  color: colors.textLight,
+  fontSize: 30,              // bigger
+  fontWeight: "800",         // bold
+  textAlign: "center",
+  fontFamily: serif,         // iOS: Times New Roman, Android: serif
+  letterSpacing: 0.5,
+  lineHeight: 30,            // tighten spacing
+},
+
+headerSubtitle: {
+  color: colors.textLight,
+  fontSize: 30,              // same size as title
+  fontWeight: "800",         // same weight
+  textAlign: "center",
+  fontFamily: serif,
+  lineHeight: 30,
+  marginTop: -1,             // pull it a touch closer to the first line
+},
+  burger: {
+    width: 34,
+    height: 24,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  line: {
+    width: 26,
+    height: 3,
+    borderRadius: 2,
+    backgroundColor: colors.textLight,
+  },
+
+  // optional dev status text
   devStatus: {
     color: colors.textLight,
     textAlign: "center",
@@ -225,11 +257,12 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
+  // content + pills
   content: {
     paddingHorizontal: 20,
     paddingBottom: 40,
+    paddingTop: 40,
   },
-
   pill: {
     backgroundColor: colors.pill,
     borderRadius: 22,
@@ -237,9 +270,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 18,
   },
-  pillTitle: { color: colors.textDark, fontWeight: "bold", marginBottom: 6, fontSize: 15 },
+  pillTitle: {
+    color: colors.textDark,
+    fontWeight: "bold",
+    marginBottom: 6,
+    fontSize: 15,
+  },
   pillValue: { color: colors.textDark, fontSize: 16 },
 });
-
-
-
