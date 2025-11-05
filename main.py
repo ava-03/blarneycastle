@@ -27,7 +27,7 @@ def home():
 def ping():
     return {"ok": True, "db": "mysql connected"}
 
-# ✅ NEW: one place for your "home tiles" data
+# NEW: one place for your "home tiles" data
 @app.get("/api/status")
 def status():
     # For now, static demo values (can be made DB-driven later)
