@@ -12,6 +12,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import {
+  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -22,9 +23,10 @@ import {
   StatusBar,
   RefreshControl,
 } from "react-native";
-import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api"; // NOTE: "../../" because we are inside app/(tabs)/
+import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";  
 import { colors } from "../../constants/colors";
-import SlideMenu from "../../components/slidemenu";
+import SlideMenu from "../../components/slidemenu";           
+
 
 /** Toggle this to true ONLY while developing if you want to see status text. */
 const SHOW_DEV_STATUS = false;
@@ -34,6 +36,8 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);       // pull-to-refresh spinner
   const [data, setData] = useState<HomeStatus | null>(null); // latest data (or null on failure)
   const [menuOpen, setMenuOpen] = useState(false);           // slide-out menu visibility
+
+  const HEADER_HEIGHT = 88;
 
   // store an interval id so we can clear it if screen unmounts
   const retryIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -121,75 +125,81 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+  <SafeAreaView style={{ flex: 1, backgroundColor: colors.brand }}>
+    <StatusBar barStyle="light-content" />
 
-      {/* Header band: centered HOME + hamburger on right */}
-      <View style={styles.header}>
-        {/* left spacer so title stays centered */}
-        <View style={{ width: 40, height: 30 }} />
-        <Text style={styles.headerText}>HOME</Text>
-        <Pressable
-          accessibilityLabel="Open menu"
-          onPress={() => setMenuOpen(true)}
-          style={styles.burger}
-        >
-          <View style={styles.line} />
-          <View style={styles.line} />
-          <View style={styles.line} />
-        </Pressable>
-      </View>
-
-      {/* (Optional) Dev-only connection hint */}
-      {SHOW_DEV_STATUS ? (
-        <Text style={styles.devStatus}>{data ? "Backend: connected" : "Backend: offline"}</Text>
-      ) : null}
-
-      {/* Content with pull-to-refresh; silent if backend down */}
-      <ScrollView
-        contentContainerStyle={styles.content}
-        refreshControl={
-          <RefreshControl
-            tintColor={colors.textLight}
-            colors={[colors.textLight]}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
+    {/* Header band: centered HOME + hamburger on right */}
+    <View style={[styles.header, { height: HEADER_HEIGHT }]}>
+      {/* left spacer so title stays centered */}
+      <View style={{ width: 40, height: 30 }} />
+      <Text style={styles.headerText}>HOME</Text>
+      <Pressable
+        accessibilityLabel="Open menu"
+        onPress={() => setMenuOpen(true)}
+        style={styles.burger}
       >
-        <Pill title="GET TICKETS HERE:" value="Click to Open" onPress={() => openTicketLink(ticketsUrl)} />
-        <Pill title="CASTLE QUEUE WAIT:" value={queue} />
-        <Pill title="CAR PARK STATUS:" value={carpark} />
-        <Pill title="CLOSING TIME:" value={closing} />
-        <Pill title="LAST ADMISSION:" value={last} />
-      </ScrollView>
-
-      {/* Slide-out menu overlay */}
-      <SlideMenu
-        visible={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        onSelect={(label: string) => {
-          // Iteration 1: just log; we’ll navigate in Iteration 2
-          console.log("Menu selected:", label);
-          setMenuOpen(false);
-        }}
-      />
+        <View style={styles.line} />
+        <View style={styles.line} />
+        <View style={styles.line} />
+      </Pressable>
     </View>
+
+    {/* (Optional) Dev-only connection hint */}
+    {SHOW_DEV_STATUS ? (
+      <Text style={styles.devStatus}>
+        {data ? "Backend: connected" : "Backend: offline"}
+      </Text>
+    ) : null}
+
+    {/* Content with pull-to-refresh; silent if backend down */}
+    <ScrollView
+      contentContainerStyle={styles.content}
+      refreshControl={
+        <RefreshControl
+          tintColor={colors.textLight}
+          colors={[colors.textLight]}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
+      <Pill
+        title="GET TICKETS HERE:"
+        value="Click to Open"
+        onPress={() => openTicketLink(ticketsUrl)}
+      />
+      <Pill title="CASTLE QUEUE WAIT:" value={queue} />
+      <Pill title="CAR PARK STATUS:" value={carpark} />
+      <Pill title="CLOSING TIME:" value={closing} />
+      <Pill title="LAST ADMISSION:" value={last} />
+    </ScrollView>
+
+    {/* Slide-out menu overlay */}
+    <SlideMenu
+      visible={menuOpen}
+      onClose={() => setMenuOpen(false)}
+      onSelect={(label: string) => {
+        console.log("Menu selected:", label);
+        setMenuOpen(false);
+      }}
+    />
+  </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.brand, paddingTop: 40 },
+  container: { flex: 1, backgroundColor: colors.brand }, // not used as root anymore
   center: { justifyContent: "center", alignItems: "center" },
 
   header: {
+    backgroundColor: colors.brand,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    marginBottom: 10,
+    // height provided inline from HEADER_HEIGHT
   },
-  headerText: { color: colors.textLight, fontSize: 24, fontWeight: "bold" },
+  headerText: { color: colors.textLight, fontSize: 28, fontWeight: "800", letterSpacing: 0.5 },
 
   burger: {
     width: 40,
@@ -206,17 +216,21 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
-  content: { paddingHorizontal: 20, paddingBottom: 40 },
+  content: {
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+  },
 
   pill: {
     backgroundColor: colors.pill,
-    borderRadius: 20,
-    paddingVertical: 16,
+    borderRadius: 22,
+    paddingVertical: 18,
     paddingHorizontal: 20,
-    marginBottom: 16,
+    marginBottom: 18,
   },
-  pillTitle: { color: colors.textDark, fontWeight: "bold", marginBottom: 5, fontSize: 14 },
+  pillTitle: { color: colors.textDark, fontWeight: "bold", marginBottom: 6, fontSize: 15 },
   pillValue: { color: colors.textDark, fontSize: 16 },
 });
+
 
 

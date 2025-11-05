@@ -1,15 +1,9 @@
 /**
- * components/SlideMenu.tsx
- * ------------------------------------------------------------
- * A simple slide-over menu overlay (no external libraries).
- * Props:
- *  - visible   : whether the menu is shown
- *  - onClose   : called when user taps outside or selects an item
- *  - onSelect  : called with the label of the item pressed
- * ------------------------------------------------------------
+ * components/slidemenu.tsx
+ * Bigger left-side overlay menu, sized to screen width, below header.
  */
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, Dimensions } from "react-native";
 
 type Props = {
   visible: boolean;
@@ -17,23 +11,20 @@ type Props = {
   onSelect: (label: string) => void;
 };
 
-// Colors inline to keep this component standalone.
-// (If you prefer, you can import from constants/colors)
+const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
+const PANEL_W = Math.min(0.9 * SCREEN_W, 360); // wider panel (up to 360px)
+
 const COLORS = {
-  bg: "#0f584d",      // menu panel color (your green)
-  text: "#ffffff",    // menu text
-  backdrop: "rgba(0,0,0,0.2)", // dim background
+  bg: "#0f584d",
+  text: "#ffffff",
+  backdrop: "rgba(0,0,0,0.35)", // a bit darker for focus
 };
 
 export default function SlideMenu({ visible, onClose, onSelect }: Props) {
-  // If not visible, render nothing — avoids unnecessary layout work.
   if (!visible) return null;
 
-  // Backdrop covers the screen. Tapping it closes the menu.
   return (
     <Pressable style={styles.backdrop} onPress={onClose}>
-      {/* This inner Pressable stops the backdrop tap from closing the menu
-          when the user taps inside the panel. */}
       <Pressable style={styles.panel} onPress={(e) => e.stopPropagation()}>
         <Text style={styles.title}>MENU</Text>
 
@@ -55,6 +46,8 @@ export default function SlideMenu({ visible, onClose, onSelect }: Props) {
   );
 }
 
+const HEADER_HEIGHT = 88; // keep in sync with the header in index.tsx
+
 const styles = StyleSheet.create({
   backdrop: {
     position: "absolute",
@@ -64,32 +57,35 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   panel: {
-    marginTop: 80,   // drop below your header/logo area
-    marginLeft: 20,
-    width: 260,
-    borderRadius: 10,
+    // left-aligned, large panel sitting just under the header
+    marginTop: HEADER_HEIGHT + 8,
+    marginLeft: 12,
+    width: PANEL_W,
+    maxHeight: SCREEN_H - (HEADER_HEIGHT + 24),
     backgroundColor: COLORS.bg,
-    paddingVertical: 16,
+    borderRadius: 14,
+    paddingVertical: 18,
     paddingHorizontal: 20,
   },
   title: {
     color: COLORS.text,
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 8,
+    fontSize: 20,
+    fontWeight: "800",
+    marginBottom: 10,
   },
   item: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 12,
   },
   bullet: {
-    width: 6, height: 6, borderRadius: 3,
+    width: 7, height: 7, borderRadius: 3.5,
     backgroundColor: COLORS.text,
-    marginRight: 10,
+    marginRight: 12,
   },
   itemText: {
     color: COLORS.text,
-    fontSize: 16,
+    fontSize: 18, // larger, easier to tap/read
+    letterSpacing: 0.3,
   },
 });
