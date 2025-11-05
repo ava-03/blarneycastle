@@ -28,7 +28,7 @@ export default function SlideMenu({ visible, onClose, onSelect }: Props) {
       <Pressable style={styles.panel} onPress={(e) => e.stopPropagation()}>
         <Text style={styles.title}>MENU</Text>
 
-        {["HOME", "NAVIGATION", "INFO", "NATURE", "AUDIO TOUR"].map((label) => (
+        {["HOME", "NAVIGATION", "INFO", "NATURE", "PHOTOS", "AUDIO TOUR"].map((label) => (
           <Pressable
             key={label}
             style={styles.item}

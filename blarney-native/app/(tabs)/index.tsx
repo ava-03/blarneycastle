@@ -26,6 +26,8 @@ import {
 import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";  
 import { colors } from "../../constants/colors";
 import SlideMenu from "../../components/slidemenu";           
+import { router, type Href } from "expo-router";
+
 
 
 /** Toggle this to true ONLY while developing if you want to see status text. */
@@ -174,12 +176,19 @@ export default function HomeScreen() {
       <Pill title="LAST ADMISSION:" value={last} />
     </ScrollView>
 
-    {/* Slide-out menu overlay */}
     <SlideMenu
       visible={menuOpen}
       onClose={() => setMenuOpen(false)}
       onSelect={(label: string) => {
-        console.log("Menu selected:", label);
+        const path: Record<string, Href> = {
+          HOME: "/",
+          NAVIGATION: "../navigation",
+          INFO: "../info",
+          NATURE: "../nature",
+          "AUDIO TOUR": "../audio",
+          PHOTOS: "../photos",
+        };
+        router.push(path[label] ?? "/");
         setMenuOpen(false);
       }}
     />
