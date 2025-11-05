@@ -1,21 +1,16 @@
 /**
- * app/index.tsx
+ * app/(tabs)/index.tsx
  * ------------------------------------------------------------
- * Blarney Castle Visitor App - Home Screen
+ * Blarney Castle Visitor App - Home Screen (Visitor-safe)
  * ------------------------------------------------------------
- * Displays visitor information from the backend:
- *  - Tickets link
- *  - Castle queue wait
- *  - Car park status
- *  - Closing time
- *  - Last admission
- *
- * Uses Axios helper functions from lib/api.ts to fetch data.
- * Designed to match the color scheme and branding you provided.
+ * - No developer/error messages shown to visitors.
+ * - If backend is unavailable, we silently show safe defaults (N/A).
+ * - Background retry every 30s to refresh data when connection returns.
+ * - Tapping "GET TICKETS HERE" opens the URL even if offline.
  * ------------------------------------------------------------
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -23,145 +18,170 @@ import {
   ScrollView,
   Pressable,
   Linking,
-  Image,
   ActivityIndicator,
   StatusBar,
+  RefreshControl,
 } from "react-native";
-
-// Import API helpers (these talk to your FastAPI backend)
-import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";
-
-// Import shared color palette
+import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api"; // NOTE: "../../" because we are inside app/(tabs)/
 import { colors } from "../../constants/colors";
+import SlideMenu from "../../components/slidemenu";
 
-// ------------------------------------------------------------
-// MAIN COMPONENT
-// ------------------------------------------------------------
+/** Toggle this to true ONLY while developing if you want to see status text. */
+const SHOW_DEV_STATUS = false;
+
 export default function HomeScreen() {
-  // --- State variables for app logic ---
-  const [loading, setLoading] = useState(true); // spinner while loading
-  const [backendStatus, setBackendStatus] = useState("checking..."); // shows 'connected' or 'offline'
-  const [data, setData] = useState<HomeStatus | null>(null); // stores data from backend
+  const [loading, setLoading] = useState(true);              // first load spinner
+  const [refreshing, setRefreshing] = useState(false);       // pull-to-refresh spinner
+  const [data, setData] = useState<HomeStatus | null>(null); // latest data (or null on failure)
+  const [menuOpen, setMenuOpen] = useState(false);           // slide-out menu visibility
 
-  // ------------------------------------------------------------
-  // Load data once when the screen first opens
-  // ------------------------------------------------------------
-  useEffect(() => {
-    (async () => {
-      try {
-        // 1️⃣ Check if backend is reachable
-        const pingResponse = await ping();
-        if (pingResponse.status === "ok") {
-          setBackendStatus("connected");
-        }
+  // store an interval id so we can clear it if screen unmounts
+  const retryIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-        // 2️⃣ Fetch the home page data (queue times etc.)
-        const homeData = await fetchHomeStatus();
-        setData(homeData);
-      } catch (error) {
-        console.error("Backend not reachable:", error);
-        setBackendStatus("offline");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  // ------------------------------------------------------------
-  // Helper: open the ticket link in browser
-  // ------------------------------------------------------------
+  // -- Helper: open the tickets URL in the device browser --
   const openTicketLink = async (url: string) => {
-    const supported = await Linking.canOpenURL(url);
-    if (supported) await Linking.openURL(url);
+    const ok = await Linking.canOpenURL(url);
+    if (ok) await Linking.openURL(url);
   };
 
-  // ------------------------------------------------------------
-  // Show spinner while loading
-  // ------------------------------------------------------------
-  if (loading) {
-    return (
-      <View style={[styles.container, styles.center]}>
-        <ActivityIndicator size="large" color={colors.textLight} />
-        <Text style={{ marginTop: 10, color: colors.textLight }}>Loading...</Text>
-      </View>
-    );
-  }
+  // -- Fetch function used by first load, pull-to-refresh, and silent retries --
+  const load = async () => {
+    try {
+      await ping(); // If this throws, we skip updating 'data' and keep previous values
+      const res = await fetchHomeStatus();
+      setData(res);
+    } catch {
+      // Intentionally silent: no alerts, no banners, no console noise in production
+      // We leave `data` as is; UI will show N/A if null.
+    }
+  };
 
-  // ------------------------------------------------------------
-  // Safe fallback values if backend is offline
-  // ------------------------------------------------------------
-  const ticketsUrl = data?.tickets_url ?? "https://blarneycastle.ie";
+  // -- First load + start a quiet background retry every 30s --
+  useEffect(() => {
+    (async () => {
+      await load();
+      setLoading(false);
+    })();
+
+    // quiet background refresh
+    retryIntervalRef.current = setInterval(load, 30_000);
+
+    return () => {
+      if (retryIntervalRef.current) clearInterval(retryIntervalRef.current);
+    };
+  }, []);
+
+  // -- Pull-to-refresh handler (manual refresh by user) --
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await load();
+    setRefreshing(false);
+  };
+
+  // Safe fallbacks if backend hasn't provided data yet
+  const ticketsUrl = data?.tickets_url ?? "https://blarneycastle.ie/gardens/";
   const queue = data ? `${data.castle_queue_wait_mins} mins` : "N/A";
   const carpark = data?.car_park_status ?? "N/A";
   const closing = data?.closing_time ?? "N/A";
   const last = data?.last_admission ?? "N/A";
 
-  // ------------------------------------------------------------
-  // Reusable small "info pill" component
-  // ------------------------------------------------------------
-  const Pill = ({ title, value, onPress }: any) => (
+  // Small reusable "pill" component
+  const Pill = ({
+    title,
+    value,
+    onPress,
+  }: {
+    title: string;
+    value?: string;
+    onPress?: () => void;
+  }) => (
     <Pressable
+      onPress={onPress}
+      disabled={!onPress}
       style={({ pressed }) => [
         styles.pill,
         pressed && { opacity: 0.9, transform: [{ scale: 0.98 }] },
       ]}
-      onPress={onPress}
-      disabled={!onPress}
+      accessibilityRole={onPress ? "button" : undefined}
+      accessibilityLabel={title}
     >
       <Text style={styles.pillTitle}>{title}</Text>
-      <Text style={styles.pillValue}>{value}</Text>
+      {value ? <Text style={styles.pillValue}>{value}</Text> : null}
     </Pressable>
   );
 
-  // ------------------------------------------------------------
-  // Actual screen layout
-  // ------------------------------------------------------------
+  // First-load spinner (shows briefly on cold start)
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.center]}>
+        <StatusBar barStyle="light-content" />
+        <ActivityIndicator size="large" color={colors.textLight} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      {/* HEADER */}
+      {/* Header band: centered HOME + hamburger on right */}
       <View style={styles.header}>
-        {/* Placeholder logo - replace with your actual castle logo later */}
-        <Image
-          source={{ uri: "https://via.placeholder.com/120x60?text=Blarney" }}
-          style={styles.logo}
-        />
+        {/* left spacer so title stays centered */}
+        <View style={{ width: 40, height: 30 }} />
         <Text style={styles.headerText}>HOME</Text>
+        <Pressable
+          accessibilityLabel="Open menu"
+          onPress={() => setMenuOpen(true)}
+          style={styles.burger}
+        >
+          <View style={styles.line} />
+          <View style={styles.line} />
+          <View style={styles.line} />
+        </Pressable>
       </View>
 
-      {/* Connection status text */}
-      <Text style={styles.connection}>Backend: {backendStatus}</Text>
+      {/* (Optional) Dev-only connection hint */}
+      {SHOW_DEV_STATUS ? (
+        <Text style={styles.devStatus}>{data ? "Backend: connected" : "Backend: offline"}</Text>
+      ) : null}
 
-      {/* MAIN CONTENT */}
-      <ScrollView contentContainerStyle={styles.content}>
-        <Pill
-          title="GET TICKETS HERE:"
-          value="Click to Open"
-          onPress={() => openTicketLink(ticketsUrl)}
-        />
+      {/* Content with pull-to-refresh; silent if backend down */}
+      <ScrollView
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl
+            tintColor={colors.textLight}
+            colors={[colors.textLight]}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
+        <Pill title="GET TICKETS HERE:" value="Click to Open" onPress={() => openTicketLink(ticketsUrl)} />
         <Pill title="CASTLE QUEUE WAIT:" value={queue} />
         <Pill title="CAR PARK STATUS:" value={carpark} />
         <Pill title="CLOSING TIME:" value={closing} />
         <Pill title="LAST ADMISSION:" value={last} />
       </ScrollView>
+
+      {/* Slide-out menu overlay */}
+      <SlideMenu
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onSelect={(label: string) => {
+          // Iteration 1: just log; we’ll navigate in Iteration 2
+          console.log("Menu selected:", label);
+          setMenuOpen(false);
+        }}
+      />
     </View>
   );
 }
 
-// ------------------------------------------------------------
-// STYLES
-// ------------------------------------------------------------
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.brand,
-    paddingTop: 40,
-  },
-  center: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  container: { flex: 1, backgroundColor: colors.brand, paddingTop: 40 },
+  center: { justifyContent: "center", alignItems: "center" },
+
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -169,25 +189,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 10,
   },
-  logo: {
-    width: 120,
-    height: 60,
-    resizeMode: "contain",
+  headerText: { color: colors.textLight, fontSize: 24, fontWeight: "bold" },
+
+  burger: {
+    width: 40,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "space-around",
   },
-  headerText: {
-    color: colors.textLight,
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  connection: {
+  line: { width: 26, height: 3, backgroundColor: colors.textLight, borderRadius: 2 },
+
+  devStatus: {
     color: colors.textLight,
     textAlign: "center",
-    marginBottom: 10,
+    opacity: 0.7,
+    marginBottom: 6,
   },
-  content: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
+
+  content: { paddingHorizontal: 20, paddingBottom: 40 },
+
   pill: {
     backgroundColor: colors.pill,
     borderRadius: 20,
@@ -195,14 +215,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 16,
   },
-  pillTitle: {
-    color: colors.textDark,
-    fontWeight: "bold",
-    marginBottom: 5,
-    fontSize: 14,
-  },
-  pillValue: {
-    color: colors.textDark,
-    fontSize: 16,
-  },
+  pillTitle: { color: colors.textDark, fontWeight: "bold", marginBottom: 5, fontSize: 14 },
+  pillValue: { color: colors.textDark, fontSize: 16 },
 });
+
+
