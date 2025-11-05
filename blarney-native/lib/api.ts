@@ -16,11 +16,11 @@ import axios from "axios";
  */
 import { Platform } from "react-native";
 
-// 👇 add both URLs
+// 
 const LOCAL_API = "http://127.0.0.1:8000"; // used when running on web
 const NGROK_API = "https://ned-plankless-nancie.ngrok-free.dev"; //  public tunnel
 
-// 👇 choose based on platform
+// 
 const API_BASE =
   process.env.EXPO_PUBLIC_API_BASE ||
   (Platform.OS === "web" ? LOCAL_API : NGROK_API);

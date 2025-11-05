@@ -117,7 +117,7 @@ export default function HomeScreen() {
       <View style={[styles.header, { height: HEADER_HEIGHT }]}>
         <View style={styles.headerSide}>
           <Image
-            source={require("../../assets/images/blarney-logo.png")}
+            source={require("../../assets/images/blarney-logo2.png")}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -207,18 +207,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 12,
-    height: Platform.select({ web: 120, default: 88 }), // bigger header on web
+    height: Platform.select({ web: 120, default: 88 }), 
   },
   headerSide: {
-    width: 56,
+    width: 66,
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
 
   logo: {
-    width: Platform.select({ web: 52, default: 44 }),
-    height: Platform.select({ web: 52, default: 44 }),
+    width: Platform.select({ web: 82, default: 74 }),
+    height: Platform.select({ web: 82, default: 74 }),
   },
 
   titleContainer: {
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     color: colors.textLight,
-    fontSize: Platform.select({ web: 34, default: 24 }),
+    fontSize: Platform.select({ web: 34, default: 28 }),
     fontWeight: "800",
     textAlign: "center",
     fontFamily: serif,
@@ -238,12 +238,12 @@ const styles = StyleSheet.create({
 
   headerSubtitle: {
     color: colors.textLight,
-    fontSize: Platform.select({ web: 34, default: 24 }),
+    fontSize: Platform.select({ web: 34, default: 28 }),
     fontWeight: "800",
     textAlign: "center",
     fontFamily: serif,
     lineHeight: Platform.select({ web: 38, default: 30 }),
-    marginTop: Platform.select({ web: -8, default: -4 }),
+    marginTop: Platform.select({ web: -4, default: -2 }),
   },
   burger: {
     width: 34,
