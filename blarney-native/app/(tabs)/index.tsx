@@ -70,7 +70,7 @@ export default function HomeScreen() {
   const ticketsUrl =
     data?.tickets_url ??
     "https://blarneycastle.retailint-tickets.com/Event/GENERALADM";
-  const queue = data ? `${data.castle_queue_wait_mins} mins` : "N/A";
+  const queue = data && typeof data.castle_queue_wait_mins === "number" ? `${data.castle_queue_wait_mins} mins` : "N/A";
   const carpark = data?.car_park_status ?? "N/A";
   const closing = data?.closing_time ?? "N/A";
   const last = data?.last_admission ?? "N/A";
@@ -189,7 +189,12 @@ export default function HomeScreen() {
   );
 }
 
-const serif = Platform.select({ ios: "Times New Roman", android: "serif" });
+const serif = Platform.select({
+  ios: "Times New Roman",
+  android: "serif",
+  web: "Times New Roman, serif", // adds proper serif fallback for browsers
+});
+
 const styles = StyleSheet.create({
   // containers
   container: { flex: 1, backgroundColor: colors.brand },
@@ -202,6 +207,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 12,
+    height: Platform.select({ web: 120, default: 88 }), // bigger header on web
   },
   headerSide: {
     width: 56,
@@ -209,39 +215,43 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  logo: { width: 60, height: 60 },
+
+  logo: {
+    width: Platform.select({ web: 52, default: 44 }),
+    height: Platform.select({ web: 52, default: 44 }),
+  },
 
   titleContainer: {
-  flex: 1,
-  alignItems: "center",
-  justifyContent: "center",
-},
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 
-headerTitle: {
-  color: colors.textLight,
-  fontSize: 30,              // bigger
-  fontWeight: "800",         // bold
-  textAlign: "center",
-  fontFamily: serif,         // iOS: Times New Roman, Android: serif
-  letterSpacing: 0.5,
-  lineHeight: 30,            // tighten spacing
-},
+  headerTitle: {
+    color: colors.textLight,
+    fontSize: Platform.select({ web: 34, default: 24 }),
+    fontWeight: "800",
+    textAlign: "center",
+    fontFamily: serif,
+    lineHeight: Platform.select({ web: 38, default: 30 }),
+  },
 
-headerSubtitle: {
-  color: colors.textLight,
-  fontSize: 30,              // same size as title
-  fontWeight: "800",         // same weight
-  textAlign: "center",
-  fontFamily: serif,
-  lineHeight: 30,
-  marginTop: -1,             // pull it a touch closer to the first line
-},
+  headerSubtitle: {
+    color: colors.textLight,
+    fontSize: Platform.select({ web: 34, default: 24 }),
+    fontWeight: "800",
+    textAlign: "center",
+    fontFamily: serif,
+    lineHeight: Platform.select({ web: 38, default: 30 }),
+    marginTop: Platform.select({ web: -8, default: -4 }),
+  },
   burger: {
     width: 34,
     height: 24,
     alignItems: "center",
     justifyContent: "space-between",
   },
+
   line: {
     width: 26,
     height: 3,
@@ -249,32 +259,62 @@ headerSubtitle: {
     backgroundColor: colors.textLight,
   },
 
-  // optional dev status text
   devStatus: {
-    color: colors.textLight,
-    textAlign: "center",
-    opacity: 0.7,
-    marginBottom: 6,
-  },
+  color: colors.textLight,
+  textAlign: "center",
+  opacity: 0.7,
+  marginBottom: Platform.select({ web: 12, default: 6 }),
+},
 
-  // content + pills
-  content: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 40,
-  },
-  pill: {
-    backgroundColor: colors.pill,
-    borderRadius: 22,
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    marginBottom: 18,
-  },
+  // pills
+  pill: Platform.select({
+    web: {
+      backgroundColor: colors.pill,
+      borderRadius: 22,
+      paddingVertical: 18,
+      paddingHorizontal: 20,
+      marginBottom: 20,
+      shadowColor: "#000",
+      shadowOpacity: 0.12,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 2 },
+    },
+    default: {
+      backgroundColor: colors.pill,
+      borderRadius: 22,
+      paddingVertical: 18,
+      paddingHorizontal: 20,
+      marginBottom: 18,
+    },
+  }),
+
   pillTitle: {
-    color: colors.textDark,
-    fontWeight: "bold",
-    marginBottom: 6,
-    fontSize: 15,
-  },
-  pillValue: { color: colors.textDark, fontSize: 16 },
-});
+  color: colors.textDark,
+  fontWeight: "bold",
+  marginBottom: 6,
+  fontSize: Platform.select({ web: 18, default: 15 }),
+},
+
+pillValue: {
+  color: colors.textDark,
+  fontSize: Platform.select({ web: 18, default: 16 }),
+},
+
+  // content area spacing
+  content: Platform.select({
+    web: {
+      maxWidth: 1100,
+      width: "100%",
+      alignSelf: "center",
+      paddingLeft: 24,
+      paddingRight: 24,
+      paddingBottom: 56,
+      paddingTop: 28,
+    },
+    default: {
+      paddingHorizontal: 20,
+      paddingBottom: 40,
+      paddingTop: 20,
+    },
+  }),
+}); 
