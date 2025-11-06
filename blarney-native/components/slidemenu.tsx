@@ -3,13 +3,19 @@
  * Bigger left-side overlay menu, sized to screen width, below header.
  */
 import React from "react";
-import { View, Text, Pressable, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Pressable, StyleSheet, Dimensions, Platform } from "react-native";
 
 type Props = {
   visible: boolean;
   onClose: () => void;
   onSelect: (label: string) => void;
 };
+
+const serif = Platform.select({
+  ios: "Times New Roman",
+  android: "serif",
+  web: "Times New Roman, serif",
+});
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 const PANEL_W = Math.min(0.9 * SCREEN_W, 360); // wider panel (up to 360px)
@@ -72,6 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "800",
     marginBottom: 10,
+    fontFamily: serif,
   },
   item: {
     flexDirection: "row",
@@ -87,5 +94,6 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     fontSize: 18, // larger, easier to tap/read
     letterSpacing: 0.3,
+    fontFamily: serif,
   },
 });

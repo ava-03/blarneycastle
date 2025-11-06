@@ -7,10 +7,17 @@ import {
   StyleSheet,
   Pressable,
   StatusBar,
+  Platform,
 } from "react-native";
 import { colors } from "../../../constants/colors";
 import SlideMenu from "../../../components/slidemenu";
 import { router, type Href } from "expo-router";
+
+const serif = Platform.select({
+  ios: "Times New Roman",
+  android: "serif",
+  web: "Times New Roman, serif",
+});
 
 export default function PhotosScreen() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -67,7 +74,7 @@ const s = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
   },
-  headerText: { color: colors.textLight, fontSize: 28, fontWeight: "800" },
+  headerText: { color: colors.textLight, fontSize: 28, fontWeight: "800", fontFamily: serif, },
   burger: {
     width: 40,
     height: 30,
