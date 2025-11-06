@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Pressable, StatusBar, Platform } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Pressable, StatusBar, Platform, Image } from "react-native";
 import { colors } from "../../../constants/colors";
 import SlideMenu from "../../../components/slidemenu";
 import { router, type Href } from "expo-router";
@@ -20,13 +20,27 @@ export default function NavigationScreen() {
 
       {/* Header */}
       <View style={[s.header, { height: HEADER_HEIGHT }]}>
-        <View style={{ width: 40, height: 30 }} />
-        <Text style={s.headerText}>NAVIGATION</Text>
-        <Pressable onPress={() => setMenuOpen(true)} style={s.burger}>
-          <View style={s.line} />
-          <View style={s.line} />
-          <View style={s.line} />
+        <Pressable 
+          onPress={() => setMenuOpen(true)} 
+          style={s.headerSide}
+          accessibilityLabel="Open menu"
+        >
+          <View style={s.burger}>
+            <View style={s.line} />
+            <View style={s.line} />
+            <View style={s.line} />
+          </View>
         </Pressable>
+
+        <Text style={s.headerText}>NAVIGATION</Text>
+
+        <View style={s.headerSide}>
+          <Image
+            source={require("../../../assets/images/blarney-logo2.png")}
+            style={s.logo}
+            resizeMode="contain"
+          />
+        </View>
       </View>
 
       {/* Slide-out menu */}
@@ -57,9 +71,26 @@ const s = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 35,
   },
-  headerText: { color: colors.textLight, fontSize: 28, fontWeight: "800", fontFamily: serif, },
-  burger: { width: 40, height: 30, alignItems: "center", justifyContent: "space-around" },
+  headerSide: {
+    width: 40,
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerText: { 
+    color: colors.textLight, 
+    fontSize: 28, 
+    fontWeight: "800", 
+    fontFamily: serif,
+    flex: 1,
+    textAlign: "center",
+  },
+  burger: { width: 34, height: 24, alignItems: "center", justifyContent: "space-between" },
   line: { width: 26, height: 3, backgroundColor: colors.textLight, borderRadius: 2 },
+  logo: {
+    width: Platform.select({ web: 62, default: 74 }),
+    height: Platform.select({ web: 62, default: 74 }),
+  },
 });

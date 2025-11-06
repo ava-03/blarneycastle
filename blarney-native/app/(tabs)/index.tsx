@@ -115,31 +115,31 @@ export default function HomeScreen() {
 
       {/* Header: logo (left) + two-line title (center) + hamburger (right) */}
       <View style={[styles.header, { height: HEADER_HEIGHT }]}>
-        <View style={styles.headerSide}>
-          <Image
-            source={require("../../assets/images/blarney-logo2.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        </View>
+  <Pressable
+    accessibilityLabel="Open menu"
+    onPress={() => setMenuOpen(true)}
+    style={styles.headerSide}
+  >
+    <View style={styles.burger}>
+      <View style={styles.line} />
+      <View style={styles.line} />
+      <View style={styles.line} />
+    </View>
+  </Pressable>
 
-        <View style={styles.titleContainer}>
-          <Text style={styles.headerTitle}>Blarney Castle</Text>
-          <Text style={styles.headerSubtitle}>& Gardens</Text>
-        </View>
+  <View style={styles.titleContainer}>
+    <Text style={styles.headerTitle}>Blarney Castle</Text>
+    <Text style={styles.headerSubtitle}>& Gardens</Text>
+  </View>
 
-        <Pressable
-          accessibilityLabel="Open menu"
-          onPress={() => setMenuOpen(true)}
-          style={styles.headerSide}
-        >
-          <View style={styles.burger}>
-            <View style={styles.line} />
-            <View style={styles.line} />
-            <View style={styles.line} />
-          </View>
-        </Pressable>
-      </View>
+  <View style={styles.headerSide}>
+    <Image
+      source={require("../../assets/images/blarney-logo2.png")}
+      style={styles.logo}
+      resizeMode="contain"
+    />
+  </View>
+</View>
 
       {SHOW_DEV_STATUS ? (
         <Text style={styles.devStatus}>
