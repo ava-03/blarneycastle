@@ -128,8 +128,8 @@ export default function HomeScreen() {
   </Pressable>
 
   <View style={styles.titleContainer}>
-    <Text style={styles.headerTitle}>Blarney Castle</Text>
-    <Text style={styles.headerSubtitle}>& Gardens</Text>
+    <Text style={styles.headerTitle}>BLARNEY CASTLE</Text>
+    <Text style={styles.headerSubtitle}>& GARDENS</Text>
   </View>
 
   <View style={styles.headerSide}>
