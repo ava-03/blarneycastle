@@ -2,8 +2,17 @@
  * components/slidemenu.tsx
  * Bigger left-side overlay menu, sized to screen width, below header.
  */
+// https://reactnative.dev/docs/pressable
+// https://reactnative.dev/docs/usewindowdimensions
+// https://reactnative.dev/docs/platform#platformselect
+
 import React from "react";
 import { View, Text, Pressable, StyleSheet, Dimensions, Platform } from "react-native";
+
+// Props:
+ // visible   > Whether menu is open
+ // onClose   > Called when user taps backdrop
+ // onSelect  > Called when user taps a menu item
 
 type Props = {
   visible: boolean;
@@ -11,12 +20,16 @@ type Props = {
   onSelect: (label: string) => void;
 };
 
+// — Consistent font across platforms 
+//   Platform.select ensures correct fallback font on web
 const serif = Platform.select({
   ios: "Times New Roman",
   android: "serif",
   web: "Times New Roman, serif",
 });
 
+// responsive layer
+// dimensions ensures it works on both mobile and web
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 const PANEL_W = Math.min(0.9 * SCREEN_W, 360); // wider panel (up to 360px)
 
@@ -30,8 +43,10 @@ export default function SlideMenu({ visible, onClose, onSelect }: Props) {
   if (!visible) return null;
 
   return (
+    // -- backdrop fills entire screen; tapping it triggers onClose()
+    // stopPropagation = prevent closing when tapping inside the panel
     <Pressable style={styles.backdrop} onPress={onClose}>
-      <Pressable style={styles.panel} onPress={(e) => e.stopPropagation()}>
+      <Pressable style={styles.panel} onPress={(e) => e.stopPropagation()}> 
         <Text style={styles.title}>MENU</Text>
 
         {["HOME", "NAVIGATION", "INFO", "NATURE", "PHOTOS", "AUDIO TOUR"].map((label) => (

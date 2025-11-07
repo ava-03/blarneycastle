@@ -2,6 +2,19 @@
  * app/(tabs)/index.tsx
  * Home (visitor-safe)
  */
+// https://reactnative.dev/docs/pressable
+// https://reactnative.dev/docs/refreshcontrol
+// https://reactnative.dev/docs/safeareaview
+// https://reactnative.dev/docs/linking#openurl
+// https://reactnative.dev/docs/image#static-image-resources
+// https://reactnative.dev/docs/platform#platformselect
+// https://docs.expo.dev/router/introduction/
+// https://react.dev/learn/synchronizing-with-effects#effects-with-cleanup
+// https://reactnative.dev/docs/linking#canopenurl
+// https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
+// https://react.dev/reference/react
+
+
 
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -18,13 +31,14 @@ import {
   Image,
   Platform,
 } from "react-native";
-import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";
+import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";     // — Axios client lives here; base URL via EXPO_PUBLIC_API_BASE
 import { colors } from "../../constants/colors";
 import SlideMenu from "../../components/slidemenu";
 import { router, type Href } from "expo-router";
 
 const SHOW_DEV_STATUS = false;
 
+ // — Loading + data state for the Home API. Hiding errors  so the UI shows "N/A" defaults
 export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -34,21 +48,24 @@ export default function HomeScreen() {
   const HEADER_HEIGHT = 104;
   const retryIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // -- Opens the ticket URL in the system browser. Uses canOpenURL for safety
   const openTicketLink = async (url: string) => {
     const ok = await Linking.canOpenURL(url);
     if (ok) await Linking.openURL(url);
   };
 
+// -- Fetches health + home status from FastAPI ( lib/api.ts). Silent catch > UI falls back to N/A
   const load = async () => {
     try {
       await ping();
       const res = await fetchHomeStatus();
       setData(res);
     } catch {
-      // silent (visitor-safe)
+      // hidden for users
     }
   };
 
+   // -- First load + quiet background refresh every 30s. Cleanup clears the interval when screen unmounts
   useEffect(() => {
     (async () => {
       await load();
@@ -60,13 +77,14 @@ export default function HomeScreen() {
     };
   }, []);
 
+// -- Pull to refresh uses RefreshControl
   const onRefresh = async () => {
     setRefreshing(true);
     await load();
     setRefreshing(false);
   };
 
-  // ---- values for UI (safe fallbacks) ----
+  // -- values for UI (safe fallbacks) ----
   const ticketsUrl =
     data?.tickets_url ??
     "https://blarneycastle.retailint-tickets.com/Event/GENERALADM";
@@ -75,7 +93,7 @@ export default function HomeScreen() {
   const closing = data?.closing_time ?? "N/A";
   const last = data?.last_admission ?? "N/A";
 
-  // small pill component
+  // small pill component - reusable pill row - accessibility label explains the action/value
   const Pill = ({
     title,
     value,
@@ -134,6 +152,7 @@ export default function HomeScreen() {
 
   <View style={styles.headerSide}>
     <Image
+    // -  static require path so bundlers can include it
       source={require("../../assets/images/blarney-logo2.png")}
       style={styles.logo}
       resizeMode="contain"
@@ -146,7 +165,7 @@ export default function HomeScreen() {
           {data ? "Backend: connected" : "Backend: offline"}
         </Text>
       ) : null}
-
+      
       <ScrollView
         contentContainerStyle={styles.content}
         refreshControl={
@@ -188,11 +207,11 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
-
+// — Platform-specific font fallback. Platform.select lets web use a CSS fallback list
 const serif = Platform.select({
   ios: "Times New Roman",
   android: "serif",
-  web: "Times New Roman, serif", // adds proper serif fallback for browsers
+  web: "Times New Roman, serif", 
 });
 
 const styles = StyleSheet.create({
@@ -226,7 +245,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
+// — Platform-specific font fallback. Platform.select lets web use a CSS fallback list
   headerTitle: {
     color: colors.textLight,
     fontSize: Platform.select({ web: 34, default: 28 }),

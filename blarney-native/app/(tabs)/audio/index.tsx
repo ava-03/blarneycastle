@@ -1,3 +1,11 @@
+// https://reactnative.dev/docs/pressable
+// https://reactnative.dev/docs/safeareaview
+// https://reactnative.dev/docs/image#static-image-resources
+// https://reactnative.dev/docs/platform#platformselect
+// https://expo.github.io/router/docs
+// https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
+// https://docs.expo.dev/router/introduction/
+
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -13,6 +21,8 @@ import { colors } from "../../../constants/colors";
 import SlideMenu from "../../../components/slidemenu";
 import { router, type Href } from "expo-router";
 
+// -- Cross platform serif choice - web includes CSS fallback list.
+// -- Platform.select is the way to branch styles per platform
 const serif = Platform.select({
   ios: "Times New Roman",
   android: "serif",
@@ -20,10 +30,12 @@ const serif = Platform.select({
 });
 
 export default function AudioScreen() {
+  // -- Local UI stat - whether slide out menu is visible
   const [menuOpen, setMenuOpen] = useState(false);
   const HEADER_HEIGHT = 88;
 
   return (
+    // -- SafeAreaView ensures header isnt obscured by system UI
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.brand }}>
       <StatusBar barStyle="light-content" />
 

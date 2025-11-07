@@ -1,11 +1,3 @@
-"""
-main.py — FastAPI backend for Blarney Castle Visitor App
----------------------------------------------------------
-Provides two routes:
-  • /api/ping  — health check for app connectivity
-  • /api/home  — returns live info from the site_status table
----------------------------------------------------------
-"""
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,10 +25,10 @@ engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 # Initialize FastAPI
 app = FastAPI(title="Blarney Castle API")
 
-# Allow Expo/web connections during development
+# Allow Expo/web connections during development -- https://stackoverflow.com/questions/77404746/cors-policy-error-on-second-render-of-react-app-from-fastapi-backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # (we’ll tighten this later)
+    allow_origins=["*"],  
     allow_methods=["*"],
     allow_headers=["*"],
 )
