@@ -15,6 +15,7 @@ import SlideMenu from "../../../components/slidemenu";
 import { router, type Href, Link } from "expo-router";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
+
 const serif = Platform.select({
   ios: "Times New Roman",
   android: "serif",

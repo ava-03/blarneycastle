@@ -45,6 +45,7 @@ export default function HomeScreen() {
   const [data, setData] = useState<HomeStatus | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
+
   const HEADER_HEIGHT = 104;
   const retryIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
