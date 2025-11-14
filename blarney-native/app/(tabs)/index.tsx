@@ -236,8 +236,8 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: Platform.select({ web: 82, default: 74 }),
-    height: Platform.select({ web: 82, default: 74 }),
+    width: Platform.select({ web: 72, default: 70 }),
+    height: Platform.select({ web: 72, default: 74 }),
   },
 
   titleContainer: {
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
 // — Platform-specific font fallback. Platform.select lets web use a CSS fallback list
   headerTitle: {
     color: colors.textLight,
-    fontSize: Platform.select({ web: 34, default: 28 }),
+    fontSize: Platform.select({ web: 30, default: 24 }),
     fontWeight: "800",
     textAlign: "center",
     fontFamily: serif,
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
 
   headerSubtitle: {
     color: colors.textLight,
-    fontSize: Platform.select({ web: 34, default: 28 }),
+    fontSize: Platform.select({ web: 30, default: 24 }),
     fontWeight: "800",
     textAlign: "center",
     fontFamily: serif,
