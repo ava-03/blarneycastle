@@ -192,15 +192,23 @@ export default function HomeScreen() {
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}
         onSelect={(label: string) => {
+          // Absolute paths instead of "../"
           const path: Record<string, Href> = {
             HOME: "/" as Href,
-            NAVIGATION: "../navigation" as Href,
-            INFO: "../info" as Href,
-            NATURE: "../nature" as Href,
-            "AUDIO TOUR": "../audio" as Href,
-            PHOTOS: "../photos" as Href,
+            NAVIGATION: "/navigation" as Href,
+            INFO: "/info" as Href,
+            NATURE: "/nature" as Href,
+            "AUDIO TOUR": "/audio" as Href,
+            PHOTOS: "/photos" as Href,
           };
-          router.push(path[label] ?? ("/" as Href));
+
+          if (label === "INFO") {
+            // Force reset to the main Info page, not whatever was open last
+            router.replace("/info");
+          } else {
+            router.push(path[label] ?? ("/" as Href));
+          }
+
           setMenuOpen(false);
         }}
       />
