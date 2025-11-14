@@ -13,6 +13,7 @@ import {
 import { colors } from "../../../constants/colors";
 import SlideMenu from "../../../components/slidemenu";
 import { router, type Href, Link } from "expo-router";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 const serif = Platform.select({
   ios: "Times New Roman",
@@ -510,61 +511,64 @@ export default function InfoScreen() {
             open={openSection === "hello"}
             onPress={() => toggleSection("hello")}
           >
-            {/* Phone */}
-            <Link
-              href="tel:+353214385252"
-              style={s.link}
-            >
+            {/* Phone & Email text links */}
+            <Link href="tel:+353214385252" style={s.linkText}>
               Phone – 00 353 21 438 5252
             </Link>
 
-            {/* Email */}
-            <Link
-              href="mailto:info@blarneycastle.ie"
-              style={s.link}
-            >
+            <Link href="mailto:info@blarneycastle.ie" style={s.linkText}>
               Email – info@blarneycastle.ie
             </Link>
 
-            {/* Facebook */}
-            <Link
-              href="https://www.facebook.com/blarneycastleireland"
-              style={s.link}
-            >
-              Facebook – Blarney Castle and Gardens
-            </Link>
+            {/* Social icons row */}
+            <View style={s.socialRow}>
+              {/* Facebook */}
+              <Link
+                href="https://www.facebook.com/blarneycastleireland"
+                asChild
+              >
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome name="facebook-f" style={s.socialIcon} />
+                </Pressable>
+              </Link>
 
-            {/* Instagram */}
-            <Link
-              href="https://www.instagram.com/blarneycastleandgardens/"
-              style={s.link}
-            >
-              Instagram – @blarneycastleandgardens
-            </Link>
+              {/* X / Twitter */}
+              <Link href="https://x.com/blarney_castle" asChild>
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome name="twitter" style={s.socialIcon} />
+                </Pressable>
+              </Link>
 
-            {/* X / Twitter */}
-            <Link
-              href="https://x.com/blarney_castle"
-              style={s.link}
-            >
-              X – @blarneycastle
-            </Link>
+              {/* YouTube */}
+              <Link
+                href="https://www.youtube.com/@theblarneycastle"
+                asChild
+              >
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome name="youtube-play" style={s.socialIcon} />
+                </Pressable>
+              </Link>
 
-            {/* YouTube */}
-            <Link
-              href="https://www.youtube.com/@theblarneycastle"
-              style={s.link}
-            >
-              YouTube – Blarney Castle & Gardens
-            </Link>
+              {/* Instagram */}
+              <Link
+                href="https://www.instagram.com/blarneycastleandgardens/"
+                asChild
+              >
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome name="instagram" style={s.socialIcon} />
+                </Pressable>
+              </Link>
 
-            {/* TripAdvisor */}
-            <Link
-              href="https://www.tripadvisor.co.uk/Attraction_Review-g186599-d214817-Reviews-Blarney_Castle_Gardens-Blarney_Cork_County_Cork.html"
-              style={s.link}
-            >
-              TripAdvisor – Blarney Castle & Gardens Reviews
-            </Link>
+              {/* TripAdvisor */}
+              <Link
+                href="https://www.tripadvisor.co.uk/Attraction_Review-g186599-d214817-Reviews-Blarney_Castle_Gardens-Blarney_Cork_County_Cork.html"
+                asChild
+              >
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome5 name="tripadvisor" style={s.socialIcon} />
+                </Pressable>
+              </Link>
+            </View>
           </AccordionPill>
 
 
@@ -806,4 +810,30 @@ const s = StyleSheet.create({
   textDecorationLine: "underline",
   fontFamily: serif,            
 },
+  linkText: {
+    fontFamily: serif,
+    fontSize: 15,
+    marginTop: 6,
+    color: "#EA9627", // brand gold
+    textDecorationLine: "underline",
+  },
+  socialRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginTop: 16,
+    gap: 14, // if TS complains, replace with marginRight on each button
+  },
+  socialIconButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#f0f0f0",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  socialIcon: {
+    fontSize: 18,
+    color: colors.brand, // your green, or "#EA9627" if you prefer gold
+  },
 });
