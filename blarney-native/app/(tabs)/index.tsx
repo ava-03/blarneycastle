@@ -166,28 +166,39 @@ export default function HomeScreen() {
           {data ? "Backend: connected" : "Backend: offline"}
         </Text>
       ) : null}
+
       
-      <ScrollView
-        contentContainerStyle={styles.content}
-        refreshControl={
-          <RefreshControl
-            tintColor={colors.textLight}
-            colors={[colors.textLight]}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
-      >
-        <Pill
-          title="GET TICKETS HERE:"
-          value="Click to Open"
-          onPress={() => openTicketLink(ticketsUrl)}
+      <View style={styles.contentWrapper}>
+        <Image
+          source={require("../../assets/images/castle_left_overly_flipped.png")} // <-- update name if different
+          style={styles.bgOverlay}
+          resizeMode="contain"
         />
-        <Pill title="CASTLE QUEUE WAIT:" value={queue} />
-        <Pill title="CAR PARK STATUS:" value={carpark} />
-        <Pill title="CLOSING TIME:" value={closing} />
-        <Pill title="LAST ADMISSION:" value={last} />
-      </ScrollView>
+
+        <ScrollView
+          contentContainerStyle={styles.content}
+          refreshControl={
+            <RefreshControl
+              tintColor={colors.textLight}
+              colors={[colors.textLight]}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+        >
+          <Pill
+            title="GET TICKETS HERE:"
+            value="Click to Open"
+            onPress={() => openTicketLink(ticketsUrl)}
+          />
+          <Pill title="CASTLE QUEUE WAIT:" value={queue} />
+          <Pill title="CAR PARK STATUS:" value={carpark} />
+          <Pill title="CLOSING TIME:" value={closing} />
+          <Pill title="LAST ADMISSION:" value={last} />
+        </ScrollView>
+      </View>
+
 
       <SlideMenu
         visible={menuOpen}
@@ -225,8 +236,14 @@ const serif = Platform.select({
 
 const styles = StyleSheet.create({
   // containers
-  container: { flex: 1, backgroundColor: colors.brand },
-  center: { justifyContent: "center", alignItems: "center" },
+  container: {
+    flex: 1,
+    backgroundColor: colors.brand,
+  },
+  center: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
   // header
   header: {
@@ -235,7 +252,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 12,
-    height: Platform.select({ web: 120, default: 88 }), 
+    height: Platform.select({ web: 120, default: 88 }),
   },
   headerSide: {
     width: 66,
@@ -243,18 +260,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   logo: {
     width: Platform.select({ web: 72, default: 70 }),
     height: Platform.select({ web: 72, default: 74 }),
   },
-
   titleContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-// — Platform-specific font fallback. Platform.select lets web use a CSS fallback list
   headerTitle: {
     color: colors.textLight,
     fontSize: Platform.select({ web: 30, default: 24 }),
@@ -263,7 +277,6 @@ const styles = StyleSheet.create({
     fontFamily: serif,
     lineHeight: Platform.select({ web: 38, default: 30 }),
   },
-
   headerSubtitle: {
     color: colors.textLight,
     fontSize: Platform.select({ web: 30, default: 24 }),
@@ -279,7 +292,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-
   line: {
     width: 26,
     height: 3,
@@ -288,11 +300,29 @@ const styles = StyleSheet.create({
   },
 
   devStatus: {
-  color: colors.textLight,
-  textAlign: "center",
-  opacity: 0.7,
-  marginBottom: Platform.select({ web: 12, default: 6 }),
-},
+    color: colors.textLight,
+    textAlign: "center",
+    opacity: 0.7,
+    marginBottom: Platform.select({ web: 12, default: 6 }),
+  },
+
+  // wrapper for content area (overlay + ScrollView)
+  contentWrapper: {
+    flex: 1,
+    backgroundColor: colors.brand,
+  },
+
+  // decorative overlay image behind the tiles
+  bgOverlay: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: "75%", // tweak 60–80% to taste
+    opacity: 0.6,
+    // @ts-ignore – keep touches going to the ScrollView
+    pointerEvents: "none",
+  },
 
   // pills
   pill: Platform.select({
@@ -315,20 +345,18 @@ const styles = StyleSheet.create({
       marginBottom: 18,
     },
   }),
-
   pillTitle: {
-  color: colors.textDark,
-  fontWeight: "bold",
-  marginBottom: 6,
-  fontSize: Platform.select({ web: 18, default: 15 }),
-},
+    color: colors.textDark,
+    fontWeight: "bold",
+    marginBottom: 6,
+    fontSize: Platform.select({ web: 18, default: 15 }),
+  },
+  pillValue: {
+    color: colors.textDark,
+    fontSize: Platform.select({ web: 18, default: 16 }),
+  },
 
-pillValue: {
-  color: colors.textDark,
-  fontSize: Platform.select({ web: 18, default: 16 }),
-},
-
-  // content area spacing
+  // content area spacing (ScrollView inner padding)
   content: Platform.select({
     web: {
       maxWidth: 1100,
@@ -345,4 +373,5 @@ pillValue: {
       paddingTop: 20,
     },
   }),
-}); 
+});
+

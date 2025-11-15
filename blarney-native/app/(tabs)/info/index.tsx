@@ -64,7 +64,11 @@ export default function InfoScreen() {
           </View>
         </Pressable>
 
-        <Text style={s.headerText}>INFORMATION</Text>
+        <View style={s.titleContainer}>
+          <Text style={s.headerTitle}>BLARNEY CASTLE</Text>
+          <Text style={s.headerSubtitle}>& GARDENS</Text>
+        </View>
+
 
         <View style={s.headerSide}>
           <Image
@@ -508,7 +512,7 @@ export default function InfoScreen() {
 
           {/* Say Hello */}
           <AccordionPill
-            title="SAY HELLO"
+            title="SAY HELLO!"
             open={openSection === "hello"}
             onPress={() => toggleSection("hello")}
           >
@@ -835,6 +839,31 @@ const s = StyleSheet.create({
   },
   socialIcon: {
     fontSize: 18,
-    color: colors.brand, // your green, or "#EA9627" if you prefer gold
+    color: colors.brand, 
   },
+titleContainer: {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+headerTitle: {
+  color: colors.textLight,
+  fontFamily: serif,
+  fontSize: 22,
+  fontWeight: "800",
+  lineHeight: 24,
+  marginBottom: -2,
+  letterSpacing: 1,
+  textAlign: "center",
+},
+
+headerSubtitle: {
+  color: colors.textLight,
+  fontFamily: serif,
+  fontSize: 22,
+  marginTop: -2,
+  letterSpacing: 1,
+  textAlign: "center",
+},
 });
