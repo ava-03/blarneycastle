@@ -35,6 +35,7 @@ import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";     // — Ax
 import { colors } from "../../constants/colors";
 import SlideMenu from "../../components/slidemenu";
 import { router, type Href } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const SHOW_DEV_STATUS = false;
 
@@ -170,7 +171,7 @@ export default function HomeScreen() {
       
       <View style={styles.contentWrapper}>
         <Image
-          source={require("../../assets/images/castle_left_overly_flipped.png")} // <-- update name if different
+          source={require("../../assets/images/castle_left_overly_flipped.png")} 
           style={styles.bgOverlay}
           resizeMode="contain"
         />
@@ -187,6 +188,29 @@ export default function HomeScreen() {
           }
           showsVerticalScrollIndicator={false}
         >
+          <View style={styles.quickLinksRow}>
+            <Pressable
+              style={styles.quickLinkButton}
+              onPress={() => router.push("/navigation" as Href)}
+              accessibilityLabel="Open map and navigation"
+            >
+              <Ionicons name="map-outline" size={35} color={colors.textLight} />
+              <Text style={styles.quickLinkLabel}>Map</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.quickLinkButton}
+              onPress={() => router.push("/info" as Href)}
+              accessibilityLabel="Open information page"
+            >
+              <Ionicons
+                name="information-circle-outline"
+                size={35}
+                color={colors.textLight}
+              />
+              <Text style={styles.quickLinkLabel}>Info</Text>
+            </Pressable>
+          </View>
           <Pill
             title="GET TICKETS HERE:"
             value="Click to Open"
@@ -204,7 +228,7 @@ export default function HomeScreen() {
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}
         onSelect={(label: string) => {
-          // Absolute paths instead of "../"
+          
           const path: Record<string, Href> = {
             HOME: "/" as Href,
             NAVIGATION: "/navigation" as Href,
@@ -215,7 +239,7 @@ export default function HomeScreen() {
           };
 
           if (label === "INFO") {
-            // Force reset to the main Info page, not whatever was open last
+            // Force reset to the main Info page
             router.replace("/info");
           } else {
             router.push(path[label] ?? ("/" as Href));
@@ -312,14 +336,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brand,
   },
 
-  // decorative overlay image behind the tiles
+  // overlay image behind the tiles
   bgOverlay: {
     position: "absolute",
-    right: 0,
-    top: 0,
+    right: -15,
+    top: -30,
     bottom: 0,
-    width: "75%", // tweak 60–80% to taste
-    opacity: 0.6,
+    width: "100%", 
+    opacity: 0.8,
     // @ts-ignore – keep touches going to the ScrollView
     pointerEvents: "none",
   },
@@ -373,5 +397,34 @@ const styles = StyleSheet.create({
       paddingTop: 20,
     },
   }),
+    quickLinksRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: -8,
+    marginBottom: 30,
+  },
+  quickLinkButton: {
+    backgroundColor: colors.brand, 
+    borderRadius: 36,
+    paddingVertical: 34,
+    paddingHorizontal: 48,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 8,
+
+    // shadow 
+    shadowColor: "#000",
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+  },
+  quickLinkLabel: {
+    marginTop: 6,
+    color: colors.textLight,
+    fontFamily: serif,
+    fontSize: 24,
+    fontWeight: "600",
+  },
 });
 

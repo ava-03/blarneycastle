@@ -40,7 +40,8 @@ type SectionId =
 export default function InfoScreen() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<SectionId | null>(null);
-  const HEADER_HEIGHT = 88;
+  const HEADER_HEIGHT = Platform.select({ web: 120, default: 88 });
+
 
   const toggleSection = (id: SectionId) => {
     setOpenSection((prev) => (prev === id ? null : id));
@@ -53,9 +54,9 @@ export default function InfoScreen() {
       {/* Header */}
       <View style={[s.header, { height: HEADER_HEIGHT }]}>
         <Pressable
+          accessibilityLabel="Open menu"
           onPress={() => setMenuOpen(true)}
           style={s.headerSide}
-          accessibilityLabel="Open menu"
         >
           <View style={s.burger}>
             <View style={s.line} />
@@ -69,7 +70,6 @@ export default function InfoScreen() {
           <Text style={s.headerSubtitle}>& GARDENS</Text>
         </View>
 
-
         <View style={s.headerSide}>
           <Image
             source={require("../../../assets/images/blarney-logo2.png")}
@@ -78,6 +78,7 @@ export default function InfoScreen() {
           />
         </View>
       </View>
+
 
       {/* Main content */}
       <View style={s.contentWrapper}>
@@ -343,9 +344,7 @@ export default function InfoScreen() {
             onPress={() => toggleSection("weather")}
           >
             <Text style={s.bodyText}>
-              Local weather information will appear here in a future update. For
-              now, please check your preferred weather app or website before
-              visiting.
+              TBC
             </Text>
           </AccordionPill>
 
@@ -448,8 +447,37 @@ export default function InfoScreen() {
             onPress={() => toggleSection("safety")}
           >
             <Text style={s.bodyText}>
-              Outline important safety advice: uneven paths, steep steps,
-              slippery surfaces in wet weather and supervision of children.
+              Your safety is our priority. Please take care when exploring the grounds and castle,
+              particularly on stone steps and uneven surfaces. Wear appropriate footwear
+              and supervise children at all times.
+            </Text>
+
+            <Text style={[s.bodyText, { marginTop: 12, fontWeight: "bold" }]}>
+              First Aid & Assistance
+            </Text>
+
+            <Text style={s.bodyText}>
+              Our trained First Aid team is available during opening hours. For any
+              assistance, please contact the castle office at{" "}
+              
+              <Link
+                href="tel:+353214385252"
+                style={[s.bodyLink]}
+              >
+                00 353 21 438 5252
+              </Link>
+              .
+            </Text>
+
+            <Text style={[s.bodyText, { marginTop: 12, fontWeight: "bold" }]}>
+              Emergency Services
+            </Text>
+
+            <Text style={s.bodyText}>
+              In case of emergency, dial 999 or 112 to reach:
+              {"\n"}• Ambulance Service
+              {"\n"}• Gardaí (Police)
+              {"\n"}• Fire Service
             </Text>
           </AccordionPill>
 
@@ -628,28 +656,47 @@ function AccordionPill({
     </View>
   );
 }
-
-const s = StyleSheet.create({
+  const s = StyleSheet.create({
+  // header – copied from Home
   header: {
     backgroundColor: colors.brand,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 30,
+    paddingHorizontal: 12,
+    height: Platform.select({ web: 120, default: 88 }),
   },
   headerSide: {
-    width: 40,
+    width: 66,
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
-  headerText: {
-    color: colors.textLight,
-    fontSize: 28,
-    fontWeight: "800",
-    fontFamily: serif,
+  logo: {
+    width: Platform.select({ web: 72, default: 70 }),
+    height: Platform.select({ web: 72, default: 74 }),
+  },
+  titleContainer: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTitle: {
+    color: colors.textLight,
+    fontSize: Platform.select({ web: 30, default: 24 }),
+    fontWeight: "800",
     textAlign: "center",
+    fontFamily: serif,
+    lineHeight: Platform.select({ web: 38, default: 30 }),
+  },
+  headerSubtitle: {
+    color: colors.textLight,
+    fontSize: Platform.select({ web: 30, default: 24 }),
+    fontWeight: "800",
+    textAlign: "center",
+    fontFamily: serif,
+    lineHeight: Platform.select({ web: 38, default: 30 }),
+    marginTop: Platform.select({ web: -4, default: -2 }),
   },
   burger: {
     width: 34,
@@ -663,10 +710,7 @@ const s = StyleSheet.create({
     backgroundColor: colors.textLight,
     borderRadius: 2,
   },
-  logo: {
-    width: Platform.select({ web: 62, default: 74 }),
-    height: Platform.select({ web: 62, default: 74 }),
-  },
+// page layout
   contentWrapper: {
     flex: 1,
     backgroundColor: "#f5f5f5",
@@ -686,6 +730,8 @@ const s = StyleSheet.create({
   section: {
     marginBottom: 12,
   },
+
+  // Pills
   pill: {
     backgroundColor: colors.brand,
     borderRadius: 999,
@@ -841,29 +887,4 @@ const s = StyleSheet.create({
     fontSize: 18,
     color: colors.brand, 
   },
-titleContainer: {
-  flex: 1,
-  alignItems: "center",
-  justifyContent: "center",
-},
-
-headerTitle: {
-  color: colors.textLight,
-  fontFamily: serif,
-  fontSize: 22,
-  fontWeight: "800",
-  lineHeight: 24,
-  marginBottom: -2,
-  letterSpacing: 1,
-  textAlign: "center",
-},
-
-headerSubtitle: {
-  color: colors.textLight,
-  fontFamily: serif,
-  fontSize: 22,
-  marginTop: -2,
-  letterSpacing: 1,
-  textAlign: "center",
-},
 });

@@ -126,7 +126,7 @@ const s = StyleSheet.create({
     textAlign: "center",
     color: colors.textLight,
     fontFamily: serif,
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "800",
   },
   backArrow: {
