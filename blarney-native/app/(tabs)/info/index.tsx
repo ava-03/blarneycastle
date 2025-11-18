@@ -482,30 +482,25 @@ export default function InfoScreen() {
           </AccordionPill>
 
           {/* Experiences in Cork */}
-          <AccordionPill
-            title="EXPERIENCES IN CORK"
-            open={openSection === "cork"}
-            onPress={() => toggleSection("cork")}
-          >
-            <Text style={s.bodyText}>10 experiences not to miss in Cork:</Text>
-            {[
-              "Kiss the Blarney Stone.",
-              "Go whale watching in West Cork.",
-              "Fill up at The English Market.",
-              "Soak up seaside charm in Kinsale.",
-              "Sip a measure (or two) at the Jameson Distillery.",
-              "Take a magical dip in Lough Hyne.",
-              "See history come to life at Cork City Gaol.",
-              "Take an unforgettable ride to Dursey Island.",
-              "Find sanctuary at Nano Nagle Place.",
-              "Marvel at the dramatic scenery of Mizen Head.",
-            ].map((t) => (
-              <View key={t} style={s.bulletRow}>
-                <Text style={s.bulletDot}>•</Text>
-                <Text style={s.bulletText}>{t}</Text>
-              </View>
-            ))}
-          </AccordionPill>
+            <AccordionPill
+              title="EXPERIENCES IN CORK"
+              open={openSection === "cork"}
+              onPress={() => toggleSection("cork")}
+            >
+              <Text style={s.bodyText}>
+                Explore 10 unforgettable experiences across Cork – from whale watching on
+                the coast to historic sites and city favourites.
+              </Text>
+
+              <Pressable
+                style={s.subButton}
+                onPress={() => router.push("/info/expcork" as Href)}
+                accessibilityLabel="View 10 not-to-miss experiences in Cork"
+              >
+                <Text style={s.subButtonText}>View experiences</Text>
+              </Pressable>
+            </AccordionPill>
+
 
 
           {/* Historical Attractions in Ireland */}
