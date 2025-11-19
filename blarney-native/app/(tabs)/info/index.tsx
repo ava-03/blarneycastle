@@ -504,33 +504,24 @@ export default function InfoScreen() {
 
 
           {/* Historical Attractions in Ireland */}
-          <AccordionPill
-            title="HISTORICAL ATTRACTIONS IN IRELAND"
-            open={openSection === "history"}
-            onPress={() => toggleSection("history")}
-          >
-            <Text style={s.bodyText}>
-              Ireland is a place like no other. Visitors come from around the world to
-              experience our rich and ancient culture, dramatic scenery and captivating
-              history.
-            </Text>
+            <AccordionPill
+              title="HISTORICAL ATTRACTIONS IN IRELAND"
+              open={openSection === "cork"}
+              onPress={() => toggleSection("cork")}
+            >
+              <Text style={s.bodyText}>
+                Explore 10 unforgettable experiences across Cork – from whale watching on
+                the coast to historic sites and city favourites.
+              </Text>
 
-            <Text style={[s.bodyText, { marginTop: 8 }]}>
-              A few notable historical attractions include:
-            </Text>
-
-            {[
-              "Brú na Bóinne, County Meath",
-              "Glendalough Monastery, County Wicklow",
-              "Rock of Cashel, County Tipperary",
-              "Trinity College, Dublin City",
-            ].map((t) => (
-              <View key={t} style={s.bulletRow}>
-                <Text style={s.bulletDot}>•</Text>
-                <Text style={s.bulletText}>{t}</Text>
-              </View>
-            ))}
-          </AccordionPill>
+              <Pressable
+                style={s.subButton}
+                onPress={() => router.push("/info/attractionsireland" as Href)}
+                accessibilityLabel="View 10 not-to-miss experiences in Cork"
+              >
+                <Text style={s.subButtonText}>View experiences</Text>
+              </Pressable>
+            </AccordionPill>
 
 
           {/* Say Hello */}
