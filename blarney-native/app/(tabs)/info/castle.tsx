@@ -110,7 +110,7 @@ export default function CastleScreen() {
             within these walls.
           </Text>
 
-          {/* Optional: room breakdown placeholder */}
+          {/* room breakdown */}
           <Text style={s.subHeading}>Castle Rooms</Text>
           <Text style={s.bodyText}>
             TBC

@@ -506,20 +506,13 @@ export default function InfoScreen() {
           {/* Historical Attractions in Ireland */}
             <AccordionPill
               title="HISTORICAL ATTRACTIONS IN IRELAND"
-              open={openSection === "cork"}
-              onPress={() => toggleSection("cork")}
+              open={openSection === "history"}
+              onPress={() => toggleSection("history")}
             >
-              <Text style={s.bodyText}>
-                Explore 10 unforgettable experiences across Cork – from whale watching on
-                the coast to historic sites and city favourites.
-              </Text>
+              <Text style={s.bodyText}>Explore Ireland’s most iconic historical sites.</Text>
 
-              <Pressable
-                style={s.subButton}
-                onPress={() => router.push("/info/attractionsireland" as Href)}
-                accessibilityLabel="View 10 not-to-miss experiences in Cork"
-              >
-                <Text style={s.subButtonText}>View experiences</Text>
+              <Pressable onPress={() => router.push("/info/attractionsireland")}>
+                <Text style={s.linkText}>View the full guide →</Text>
               </Pressable>
             </AccordionPill>
 
