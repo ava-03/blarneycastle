@@ -1,20 +1,28 @@
-/**
- * app/(tabs)/index.tsx
- * Home (visitor-safe)
- */
 // https://reactnative.dev/docs/pressable
 // https://reactnative.dev/docs/refreshcontrol
 // https://reactnative.dev/docs/safeareaview
 // https://reactnative.dev/docs/linking#openurl
 // https://reactnative.dev/docs/image#static-image-resources
+// https://reactnative.dev/docs/image
 // https://reactnative.dev/docs/platform#platformselect
+// https://reactnative.dev/docs/statusbar
+// https://reactnative.dev/docs/scrollview
 // https://docs.expo.dev/router/introduction/
-// https://react.dev/learn/synchronizing-with-effects#effects-with-cleanup
+// https://react.dev/learn/synchronizing-with-effects#effects-with-cleanup - for initial load + 30s background refresh + cleanup
 // https://reactnative.dev/docs/linking#canopenurl
 // https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
 // https://react.dev/reference/react
-
-
+// https://icons.expo.fyi/Index
+// https://docs.expo.dev/router/basics/navigation/
+// https://reactnative.dev/docs/activityindicator - loading spinner
+// https://reactnative.dev/docs/flexbox
+// https://reactnative.dev/docs/shadow-props
+// https://www.youtube.com/watch?v=vsO4TLtAZzk
+// https://www.youtube.com/watch?v=czhLCGuu_AU
+// https://www.bing.com/videos/riverview/relatedvideo?q=React+Native+%2f+Expo+app+tutorial&&mid=EDF96FB854573B3FE736EDF96FB854573B3FE736&FORM=VCGVRP
+// https://www.youtube.com/watch?v=Ts3kTbdQ_4U
+// https://www.youtube.com/watch?v=22uJhH1S8fU
+// https://www.youtube.com/watch?v=RIO5YFxH_ik
 
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -31,7 +39,7 @@ import {
   Image,
   Platform,
 } from "react-native";
-import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";     // — Axios client lives here; base URL via EXPO_PUBLIC_API_BASE
+import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";     // — Axios client  here - base URL via EXPO_PUBLIC_API_BASE
 import { colors } from "../../constants/colors";
 import SlideMenu from "../../components/slidemenu";
 import { router, type Href } from "expo-router";
@@ -39,8 +47,10 @@ import { Ionicons } from "@expo/vector-icons";
 
 const SHOW_DEV_STATUS = false;
 
- // — Loading + data state for the Home API. Hiding errors  so the UI shows "N/A" defaults
+ // -- Loading + data state for the Home API. Hiding errors so the UI shows "N/A" defaults
 export default function HomeScreen() {
+  // loading: initial spinner, refreshing: pull-to-refresh spinner
+  // data: home status from backend, menuOpen: slide out menu visibility
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState<HomeStatus | null>(null);
@@ -188,6 +198,7 @@ export default function HomeScreen() {
           }
           showsVerticalScrollIndicator={false}
         >
+          {/* Row of large circular quick access buttons */}
           <View style={styles.quickLinksRow}>
             <Pressable
               style={styles.quickLinkButton}

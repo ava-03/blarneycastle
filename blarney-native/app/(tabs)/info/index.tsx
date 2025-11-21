@@ -1,3 +1,24 @@
+// https://blarneycastle.retailint-tickets.com/Home
+// https://reactnative.dev/docs/pressable
+// https://reactnative.dev/docs/scrollview
+// https://reactnative.dev/docs/image - image and cards
+// https://reactnative.dev/docs/safeareaview
+// https://reactnative.dev/docs/stylesheet
+// https://reactnative.dev/docs/platform - for iOS/web font handling & sizing
+// https://reactnative.dev/docs/linking - call, email and web
+// https://docs.expo.dev/router/basics/navigation/
+// https://icons.expo.fyi/Index - social icons
+// https://reactnative.dev/docs/pressable#onpress
+// https://react.dev/learn/conditional-rendering - used for “open ? content : null
+// https://react.dev/reference/react/useState
+// https://reactnative.dev/docs/shadow-props
+// https://reactnative.dev/docs/platform-specific-code
+// https://www.youtube.com/watch?v=u6MDeHJOjGI
+// https://www.youtube.com/watch?v=czhLCGuu_AU
+// https://www.youtube.com/watch?v=Ts3kTbdQ_4U
+// https://www.youtube.com/watch?v=IuJiyKsJ14A 
+// https://www.youtube.com/watch?v=22uJhH1S8fU
+
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -22,6 +43,7 @@ const serif = Platform.select({
   web: "Times New Roman, serif",
 });
 
+// All accordian section IDs
 type SectionId =
   | "tickets"
   | "opening"
@@ -38,16 +60,19 @@ type SectionId =
   | "hello";
 
 export default function InfoScreen() {
+  // controls slide out menu visibility
   const [menuOpen, setMenuOpen] = useState(false);
+  // controls which accordian is open
   const [openSection, setOpenSection] = useState<SectionId | null>(null);
   const HEADER_HEIGHT = Platform.select({ web: 120, default: 88 });
 
-
+// Toggle logic for accordian
   const toggleSection = (id: SectionId) => {
     setOpenSection((prev) => (prev === id ? null : id));
   };
 
   return (
+    // safe area & background
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.brand }}>
       <StatusBar barStyle="light-content" />
 
@@ -130,7 +155,7 @@ export default function InfoScreen() {
                 s.bodyText,
                 {
                   marginTop: 12,
-                  color: "#EA9627", // deep brand-friendly blue
+                  color: "#EA9627",
                   textDecorationLine: "underline",
                   fontWeight: "600",
                 },
@@ -189,6 +214,7 @@ export default function InfoScreen() {
             open={openSection === "faqs"}
             onPress={() => toggleSection("faqs")}
           >
+            {/* FAQ pairs rendered in a loop */}
             <View>
               {[
                 [
@@ -600,7 +626,7 @@ export default function InfoScreen() {
             "AUDIO TOUR": "/audio" as Href,
             PHOTOS: "/photos" as Href,
           };
-
+          // INFO always resets back to main info page
           if (label === "INFO") {
             router.replace("/info");
           } else {
@@ -613,7 +639,7 @@ export default function InfoScreen() {
     </SafeAreaView>
   );
 }
-
+// reusable accordian pill component
 function AccordionPill({
   title,
   open,
@@ -635,8 +661,9 @@ function AccordionPill({
     </View>
   );
 }
+// styles
   const s = StyleSheet.create({
-  // header – copied from Home
+// header
   header: {
     backgroundColor: colors.brand,
     flexDirection: "row",

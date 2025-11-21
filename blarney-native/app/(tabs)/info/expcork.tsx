@@ -1,3 +1,14 @@
+// https://reactnative.dev/docs/safeareaview
+// https://reactnative.dev/docs/pressable
+// https://reactnative.dev/docs/platform
+// https://reactnative.dev/docs/scrollview
+// https://reactnative.dev/docs/stylesheet
+// https://reactnative.dev/docs/image
+// https://www.youtube.com/watch?v=Ts3kTbdQ_4U
+// https://www.youtube.com/watch?v=RIO5YFxH_ik
+// https://www.bing.com/videos/riverview/relatedvideo?&q=Creating+Responsive+Card+Layouts+in+React+Native&&mid=8FAC63E032ED79C2A8808FAC63E032ED79C2A880&&FORM=VRDGAR
+// https://blarneycastle.retailint-tickets.com/Home
+
 import React from "react";
 import {
   SafeAreaView,
@@ -13,7 +24,7 @@ import {
 import { colors } from "../../../constants/colors";
 import { router } from "expo-router";
 
-// Same serif choice as the rest of the app
+// Same font 
 const serif = Platform.select({
   ios: "Times New Roman",
   android: "serif",
@@ -176,7 +187,7 @@ export default function ExperiencesCorkScreen() {
 }
 
 const s = StyleSheet.create({
-  // header (matches home/info style)
+  // header 
   header: {
     backgroundColor: colors.brand,
     flexDirection: "row",
