@@ -1,12 +1,17 @@
 // https://blarneycastle.retailint-tickets.com/Home
 // https://reactnative.dev/docs/pressable
 // https://reactnative.dev/docs/scrollview
+// https://reactnative.dev/docs/safeareaview
 // https://reactnative.dev/docs/image - image and cards
 // https://reactnative.dev/docs/safeareaview
 // https://reactnative.dev/docs/stylesheet
 // https://reactnative.dev/docs/platform - for iOS/web font handling & sizing
 // https://reactnative.dev/docs/linking - call, email and web
 // https://docs.expo.dev/router/basics/navigation/
+// https://expo.github.io/router/docs
+// https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
+// https://docs.expo.dev/router/introduction/
+// https://reactnavigation.org/docs/drawer-navigator/
 // https://icons.expo.fyi/Index - social icons
 // https://reactnative.dev/docs/pressable#onpress
 // https://react.dev/learn/conditional-rendering - used for “open ? content : null

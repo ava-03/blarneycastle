@@ -8,6 +8,7 @@
 // https://reactnative.dev/docs/statusbar
 // https://reactnative.dev/docs/scrollview
 // https://docs.expo.dev/router/introduction/
+// https://axios-http.com/docs/api_intro
 // https://react.dev/learn/synchronizing-with-effects#effects-with-cleanup - for initial load + 30s background refresh + cleanup
 // https://reactnative.dev/docs/linking#canopenurl
 // https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
@@ -17,6 +18,8 @@
 // https://reactnative.dev/docs/activityindicator - loading spinner
 // https://reactnative.dev/docs/flexbox
 // https://reactnative.dev/docs/shadow-props
+// https://www.bing.com/videos/riverview/relatedvideo?&q=Expo+Router+Tutorial&&mid=6F3CBEE362D2A2DB1EA86F3CBEE362D2A2DB1EA8&&FORM=VRDGAR
+// https://www.bing.com/videos/riverview/relatedvideo?&q=Using+Axios+in+React+Native+(Expo)&&mid=4A19FA7B5182691D26F64A19FA7B5182691D26F6&&FORM=VRDGAR
 // https://www.youtube.com/watch?v=vsO4TLtAZzk
 // https://www.youtube.com/watch?v=czhLCGuu_AU
 // https://www.bing.com/videos/riverview/relatedvideo?q=React+Native+%2f+Expo+app+tutorial&&mid=EDF96FB854573B3FE736EDF96FB854573B3FE736&FORM=VCGVRP
