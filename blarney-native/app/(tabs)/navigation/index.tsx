@@ -164,12 +164,13 @@ function NavigationMap() {
   const composed = Gesture.Simultaneous(pan, pinch);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value },
-      { translateY: translateY.value },
-      { scale: zoom.value },
-    ],
-  }));
+  transform: [
+    { scale: zoom.value },
+    { translateX: translateX.value },
+    { translateY: translateY.value },
+  ],
+}));
+
 
   useEffect(() => {
     let sub: Location.LocationSubscription | null = null;
@@ -207,8 +208,6 @@ const userOnMap = !isOffsite && userPx
   ? { x: userPx.x * base.baseScale, y: userPx.y * base.baseScale }
   : null;
 
-  const [followMe, setFollowMe] = useState(true);
-const lastCenterRef = React.useRef(0);
 
 function clampTranslate(tx: number, ty: number, z: number) {
   const contentW = base.renderW * z;
@@ -239,20 +238,6 @@ function centerOn(point: { x: number; y: number }, targetZoom = 1.8) {
   translateX.value = withTiming(clamped.x, { duration: 250 });
   translateY.value = withTiming(clamped.y, { duration: 250 });
 }
-
-// Follow-me behaviour (recenters every ~1.2s while walking)
-useEffect(() => {
-  if (!followMe) return;
-  if (!userOnMap) return;
-  if (!viewport.w || !viewport.h) return;
-
-  const now = Date.now();
-  if (now - lastCenterRef.current < 1200) return;
-
-  lastCenterRef.current = now;
-  centerOn(userOnMap, 1.8);
-}, [followMe, userOnMap, viewport.w, viewport.h]);
-
 
   return (
   <View
@@ -382,9 +367,9 @@ const s = StyleSheet.create({
   // USER DOT
   userDot: {
     position: "absolute",
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: "#2ea8ff",
     borderWidth: 2,
     borderColor: "#fff",
