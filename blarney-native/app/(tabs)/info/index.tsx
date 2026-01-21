@@ -131,21 +131,21 @@ export default function InfoScreen() {
             <View style={{ marginTop: 12 }}>
               <View style={s.priceRow}>
                 <Text style={s.priceLabel}>Adult Admission</Text>
-                <Text style={s.priceValue}>€23</Text>
+                <Text style={s.priceValue}>€24</Text>
               </View>
               <View style={s.priceRow}>
                 <Text style={s.priceLabel}>Student / Seniors (65+)</Text>
-                <Text style={s.priceValue}>€18</Text>
+                <Text style={s.priceValue}>€19</Text>
               </View>
               <View style={s.priceRow}>
                 <Text style={s.priceLabel}>
                   Children 6–16 (5 & under free, with adult)
                 </Text>
-                <Text style={s.priceValue}>€11</Text>
+                <Text style={s.priceValue}>€12</Text>
               </View>
               <View style={s.priceRow}>
                 <Text style={s.priceLabel}>Family (2 adults + 2 children)</Text>
-                <Text style={s.priceValue}>€60</Text>
+                <Text style={s.priceValue}>€65</Text>
               </View>
             </View>
 
@@ -519,7 +519,7 @@ export default function InfoScreen() {
               onPress={() => toggleSection("cork")}
             >
               <Text style={s.bodyText}>
-                Explore 10 unforgettable experiences across Cork – from whale watching on
+                Explore 10 unforgettable experiences across Cork - from whale watching on
                 the coast to historic sites and city favourites.
               </Text>
 

@@ -35,7 +35,7 @@ const experiences = [
   {
     title: "Kiss the Blarney Stone",
     paragraphs: [
-      "Of course! No trip to South West Ireland is complete without a visit to Blarney Castle. The origins of the Blarney Stone is steeped in myth and legend, and for over 200 years pilgrims have journeyed to Blarney to kiss the stone  and receive the gift of eloquence. Millions of visitors flock to Blarney Castle every year to continue this tradition, climbing the battlements to kiss the magical stone.",
+      "Of course no trip to South West Ireland is complete without a visit to Blarney Castle. The origins of the Blarney Stone is steeped in myth and legend, and for over 200 years pilgrims have journeyed to Blarney to kiss the stone  and receive the gift of eloquence. Millions of visitors flock to Blarney Castle every year to continue this tradition, climbing the battlements to kiss the magical stone.",
       "There is much more to Blarney Castle than the stone, however. Visitors can step back in time and experience the fascinating history of our 15th century castle. And don’t forget, we have over 60 acres of sprawling parklands which include gardens, avenues, arboretums and waterways, offering diverse surroundings from tranquil to serene, to mystical and magical places.",
     ],
     image: require("../../../assets/images/kiss_stone.jpg"),
