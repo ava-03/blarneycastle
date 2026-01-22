@@ -4,6 +4,7 @@
 // https://expo.github.io/router/docs
 // https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
 // https://docs.expo.dev/router/introduction/
+// Irish Media Agency (Blarney Castle web team)
 
 import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, StyleSheet, Pressable, StatusBar, Platform, Image } from "react-native";
@@ -177,7 +178,7 @@ export default function NavigationScreen() {
       onSelect={(label: string) => {
         const path: Record<string, Href> = {
           HOME: "/" as Href,
-          NAVIGATION: "../navigation" as Href,
+          MAP: "../navigation" as Href,
           INFO: "../info" as Href,
           NATURE: "../nature" as Href,
           "AUDIO TOUR": "../audio" as Href,
@@ -204,7 +205,7 @@ export default function NavigationScreen() {
         </View>
       </Pressable>
 
-      <Text style={s.headerText}>NAVIGATION</Text>
+      <Text style={s.headerText}>MAP</Text>
 
       <View style={s.headerSide}>
         <Image
