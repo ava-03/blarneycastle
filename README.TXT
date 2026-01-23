@@ -51,6 +51,7 @@ REFERENCES:
 // https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
 // https://docs.expo.dev/router/introduction/
 // https://reactnavigation.org/docs/drawer-navigator/
+// Irish Media Agency (Blarney Castle web team)
 
 app/(tabs)/nature/index.tsx
 REFERENCES:
