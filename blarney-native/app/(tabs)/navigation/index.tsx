@@ -34,7 +34,7 @@ function latLngToPixel({ lat, lng }: LatLng): Px {
 }
 
 /**
- * FASTEST ROUTE (Entrance -> Castle) - DONE BY IMAGE PIXELS
+ * FASTEST ROUTE (Entrance to Castle) - DONE BY IMAGE PIXELS
  */
 const FASTEST_ROUTE_PX: Px[] = [
   { x: 3676, y: 851 },  // Entrance
