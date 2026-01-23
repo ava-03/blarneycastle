@@ -17,7 +17,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Svg, { Polyline } from "react-native-svg";
 
-// -- Cross platform serif choice - web includes CSS fallback list.
+
 const serif = Platform.select({
   ios: "Times New Roman",
   android: "serif",
@@ -34,8 +34,7 @@ function latLngToPixel({ lat, lng }: LatLng): Px {
 }
 
 /**
- * FASTEST ROUTE (Entrance -> Castle) in ORIGINAL image pixels (5140x5054)
- * You can add/remove points here any time.
+ * FASTEST ROUTE (Entrance -> Castle) - DONE BY IMAGE PIXELS
  */
 const FASTEST_ROUTE_PX: Px[] = [
   { x: 3676, y: 851 },  // Entrance
@@ -162,7 +161,7 @@ export default function NavigationScreen() {
   <SafeAreaView style={s.screen} edges={["top", "left", "right"]}>
     <StatusBar barStyle="light-content" />
 
-    {/* Content area (map) */}
+    {/* MAP ROUTES */}
     <View style={[s.content, { paddingTop: HEADER_TOTAL_HEIGHT }]}>
       <NavigationMap
         showFastestRoute={showFastestRoute}
@@ -171,7 +170,7 @@ export default function NavigationScreen() {
       />
     </View>
 
-    {/* Slide-out menu */}
+    {/* MENU */}
     <SlideMenu
       visible={menuOpen}
       onClose={() => setMenuOpen(false)}
@@ -190,7 +189,7 @@ export default function NavigationScreen() {
       }}
     />
 
-    {/* Header overlay */}
+    {/* HEADER */}
     <View style={[s.headerOverlay, { height: HEADER_TOTAL_HEIGHT, paddingTop: insets.top }]}>
       <Pressable
         onPress={() => setMenuOpen(true)}
@@ -216,7 +215,7 @@ export default function NavigationScreen() {
       </View>
     </View>
 
-    {/* ROUTES DROPDOWN GOES HERE (overlay) */}
+    {/* ROUTES DROPDOWN */}
     <View style={s.routesUi} pointerEvents="box-none">
       <Pressable
         style={s.routesBtn}
@@ -271,14 +270,13 @@ function NavigationMap({
 
   const mapSource = require("../../../assets/images/bc-map.jpg");
 
-  // Exact image size
+  // IMAGE SIZE
   const imgW = 5140;
   const imgH = 5054;
 
   const [viewport, setViewport] = useState({ w: 0, h: 0 });
   const [userLatLng, setUserLatLng] = useState<LatLng | null>(null);
 
-  // Extra zoom on top of the base "fit" scale
   const zoom = useSharedValue(1);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -453,7 +451,7 @@ function NavigationMap({
               resizeMode="contain"
             />
 
-            {/* ROUTE OVERLAY PLACEMENT */}
+            {/* ROUTE OVERLAY */}
             {showFastestRoute && (
               <Svg
                 width="100%"
@@ -510,7 +508,7 @@ function NavigationMap({
             )}
 
 
-            {/* User dot */}
+            {/* GPS DOT - USER LIVE LOCATION */}
             {userOnMap && (
               <View style={[s.userDot, { left: userOnMap.x - 5, top: userOnMap.y - 5 }]} />
             )}
@@ -518,7 +516,7 @@ function NavigationMap({
         </View>
       </GestureDetector>
 
-      {/* Floating buttons (fixed on screen) */}
+      {/* BUTTONS - FIXED ON SCREEN */}
       <Pressable
         style={[s.centerButton, !userOnMap && { opacity: 0.35 }]}
         onPress={() => userOnMap && centerOn(userOnMap, 1.8)}
@@ -624,7 +622,6 @@ const s = StyleSheet.create({
     borderColor: "#fff",
   },
 
-  // Recenter button
   centerButton: {
     position: "absolute",
     bottom: 24,
@@ -645,7 +642,6 @@ const s = StyleSheet.create({
     fontWeight: "700",
   },
 
-  // Routes dropdown UI
 routesUi: {
   position: "absolute",
   left: 20,

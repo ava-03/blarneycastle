@@ -208,7 +208,7 @@ export default function HomeScreen() {
               onPress={() => router.push("/navigation" as Href)}
               accessibilityLabel="Open map and navigation"
             >
-              <Ionicons name="map-outline" size={35} color={colors.textLight} />
+              <Ionicons name="location-outline" size={35} color={colors.textLight} />
               <Text style={styles.quickLinkLabel}>Map</Text>
             </Pressable>
 
