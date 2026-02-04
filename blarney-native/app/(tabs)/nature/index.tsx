@@ -29,7 +29,7 @@ const serif = Platform.select({
   web: "Times New Roman, serif",
 });
 
-export default function NatureScreen() {
+export default function AudioScreen() {
   // -- Local UI stat - whether slide out menu is visible
   const [menuOpen, setMenuOpen] = useState(false);
   const HEADER_HEIGHT = 88;
@@ -92,7 +92,7 @@ export default function NatureScreen() {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          paddingHorizontal: 35,
+          paddingHorizontal: 30,
         },
         headerSide: {
           width: 40,
