@@ -208,7 +208,7 @@ export default function HomeScreen() {
               onPress={() => router.push("/navigation" as Href)}
               accessibilityLabel="Open map and navigation"
             >
-              <Ionicons name="location-outline" size={35} color={colors.textLight} />
+              <Ionicons name="location-outline" size={35} color={colors.brand} />
               <Text style={styles.quickLinkLabel}>Map</Text>
             </Pressable>
 
@@ -220,7 +220,7 @@ export default function HomeScreen() {
               <Ionicons
                 name="information-circle-outline"
                 size={35}
-                color={colors.textLight}
+                color={colors.brand}
               />
               <Text style={styles.quickLinkLabel}>Info</Text>
             </Pressable>
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
   },
 
   // content area spacing (ScrollView inner padding)
-  content: Platform.select({
+    content: Platform.select({
     web: {
       maxWidth: 1100,
       width: "100%",
@@ -411,34 +411,45 @@ const styles = StyleSheet.create({
       paddingTop: 20,
     },
   }),
-    quickLinksRow: {
+
+  // Map & Info buttons
+  quickLinksRow: {
     flexDirection: "row",
     justifyContent: "center",
     marginTop: -8,
-    marginBottom: 30,
+    marginBottom: 26,
   },
+
   quickLinkButton: {
-    backgroundColor: colors.brand, 
-    borderRadius: 36,
-    paddingVertical: 34,
-    paddingHorizontal: 48,
+    backgroundColor: "rgba(255,255,255,0.92)",
+    borderRadius: 28,
+    paddingVertical: 24,
+    paddingHorizontal: 30,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 8,
+    minWidth: 135,
+    minHeight: 135,
+    marginHorizontal: 7, 
 
-    // shadow 
+    // iOS shadow
     shadowColor: "#000",
-    shadowOpacity: 0.18,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+
+    // Android shadow
+    elevation: 5,
+
+    // subtle border
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.05)",
   },
+
   quickLinkLabel: {
-    marginTop: 6,
-    color: colors.textLight,
-    fontFamily: serif,
-    fontSize: 24,
-    fontWeight: "600",
+    marginTop: 10,
+    color: colors.brand,
+    fontSize: 28,
+    fontFamily: serif, 
   },
 });
 
