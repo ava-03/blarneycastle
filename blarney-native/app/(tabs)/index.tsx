@@ -1,31 +1,4 @@
-// https://reactnative.dev/docs/pressable
-// https://reactnative.dev/docs/refreshcontrol
-// https://reactnative.dev/docs/safeareaview
-// https://reactnative.dev/docs/linking#openurl
-// https://reactnative.dev/docs/image#static-image-resources
-// https://reactnative.dev/docs/image
-// https://reactnative.dev/docs/platform#platformselect
-// https://reactnative.dev/docs/statusbar
-// https://reactnative.dev/docs/scrollview
-// https://docs.expo.dev/router/introduction/
-// https://axios-http.com/docs/api_intro
-// https://react.dev/learn/synchronizing-with-effects#effects-with-cleanup - for initial load + 30s background refresh + cleanup
-// https://reactnative.dev/docs/linking#canopenurl
-// https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
-// https://react.dev/reference/react
-// https://icons.expo.fyi/Index
-// https://docs.expo.dev/router/basics/navigation/
-// https://reactnative.dev/docs/activityindicator - loading spinner
-// https://reactnative.dev/docs/flexbox
-// https://reactnative.dev/docs/shadow-props
-// https://www.bing.com/videos/riverview/relatedvideo?&q=Expo+Router+Tutorial&&mid=6F3CBEE362D2A2DB1EA86F3CBEE362D2A2DB1EA8&&FORM=VRDGAR
-// https://www.bing.com/videos/riverview/relatedvideo?&q=Using+Axios+in+React+Native+(Expo)&&mid=4A19FA7B5182691D26F64A19FA7B5182691D26F6&&FORM=VRDGAR
-// https://www.youtube.com/watch?v=vsO4TLtAZzk
-// https://www.youtube.com/watch?v=czhLCGuu_AU
-// https://www.bing.com/videos/riverview/relatedvideo?q=React+Native+%2f+Expo+app+tutorial&&mid=EDF96FB854573B3FE736EDF96FB854573B3FE736&FORM=VCGVRP
-// https://www.youtube.com/watch?v=Ts3kTbdQ_4U
-// https://www.youtube.com/watch?v=22uJhH1S8fU
-// https://www.youtube.com/watch?v=RIO5YFxH_ik
+// app/(tabs)/index.tsx
 
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -41,8 +14,10 @@ import {
   RefreshControl,
   Image,
   Platform,
+  ImageBackground,
 } from "react-native";
-import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";     // — Axios client  here - base URL via EXPO_PUBLIC_API_BASE
+
+import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";
 import { colors } from "../../constants/colors";
 import SlideMenu from "../../components/slidemenu";
 import { router, type Href } from "expo-router";
@@ -50,65 +25,68 @@ import { Ionicons } from "@expo/vector-icons";
 
 const SHOW_DEV_STATUS = false;
 
- // -- Loading + data state for the Home API. Hiding errors so the UI shows "N/A" defaults
+// — Platform-specific serif fallback (keeping your current approach to avoid font issues)
+const serif = Platform.select({
+  ios: "Times New Roman",
+  android: "serif",
+  web: "Times New Roman, serif",
+});
+
 export default function HomeScreen() {
-  // loading: initial spinner, refreshing: pull-to-refresh spinner
-  // data: home status from backend, menuOpen: slide out menu visibility
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState<HomeStatus | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-
-  const HEADER_HEIGHT = 104;
   const retryIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // -- Opens the ticket URL in the system browser. Uses canOpenURL for safety
   const openTicketLink = async (url: string) => {
     const ok = await Linking.canOpenURL(url);
     if (ok) await Linking.openURL(url);
   };
 
-// -- Fetches health + home status from FastAPI ( lib/api.ts). Silent catch > UI falls back to N/A
   const load = async () => {
     try {
       await ping();
       const res = await fetchHomeStatus();
       setData(res);
     } catch {
-      // hidden for users
+      // silent fail -> UI falls back to N/A
     }
   };
 
-   // -- First load + quiet background refresh every 30s. Cleanup clears the interval when screen unmounts
   useEffect(() => {
     (async () => {
       await load();
       setLoading(false);
     })();
+
     retryIntervalRef.current = setInterval(load, 30_000);
+
     return () => {
       if (retryIntervalRef.current) clearInterval(retryIntervalRef.current);
     };
   }, []);
 
-// -- Pull to refresh uses RefreshControl
   const onRefresh = async () => {
     setRefreshing(true);
     await load();
     setRefreshing(false);
   };
 
-  // -- values for UI (safe fallbacks) ----
   const ticketsUrl =
     data?.tickets_url ??
     "https://blarneycastle.retailint-tickets.com/Event/GENERALADM";
-  const queue = data && typeof data.castle_queue_wait_mins === "number" ? `${data.castle_queue_wait_mins} mins` : "N/A";
+
+  const queue =
+    data && typeof data.castle_queue_wait_mins === "number"
+      ? `${data.castle_queue_wait_mins} minutes`
+      : "N/A";
+
   const carpark = data?.car_park_status ?? "N/A";
   const closing = data?.closing_time ?? "N/A";
   const last = data?.last_admission ?? "N/A";
 
-  // small pill component - reusable pill row - accessibility label explains the action/value
   const Pill = ({
     title,
     value,
@@ -123,7 +101,7 @@ export default function HomeScreen() {
       disabled={!onPress}
       style={({ pressed }) => [
         styles.pill,
-        pressed && { opacity: 0.9, transform: [{ scale: 0.98 }] },
+        pressed && onPress ? { opacity: 0.92, transform: [{ scale: 0.99 }] } : null,
       ]}
       accessibilityRole={onPress ? "button" : undefined}
       accessibilityLabel={title}
@@ -143,37 +121,33 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.brand }}>
-      <StatusBar barStyle="light-content" />
+    <SafeAreaView style={styles.container}>
+      {/* White top area -> use dark icons/text in status bar */}
+      <StatusBar barStyle="dark-content" />
 
-      {/* Header: logo (left) + two-line title (center) + hamburger (right) */}
-      <View style={[styles.header, { height: HEADER_HEIGHT }]}>
-  <Pressable
-    accessibilityLabel="Open menu"
-    onPress={() => setMenuOpen(true)}
-    style={styles.headerSide}
-  >
-    <View style={styles.burger}>
-      <View style={styles.line} />
-      <View style={styles.line} />
-      <View style={styles.line} />
-    </View>
-  </Pressable>
+      {/* Top white header */}
+      <View style={styles.topBar}>
+        <Pressable
+          accessibilityLabel="Open menu"
+          onPress={() => setMenuOpen(true)}
+          style={styles.menuButton}
+        >
+          <Ionicons name="menu" size={36} color={colors.brand} />
+        </Pressable>
 
-  <View style={styles.titleContainer}>
-    <Text style={styles.headerTitle}>BLARNEY CASTLE</Text>
-    <Text style={styles.headerSubtitle}>& GARDENS</Text>
-  </View>
+        <View pointerEvents="none" style={styles.logoWrap}>
+          <Image
+            source={require("../../assets/images/logo-white.png")}
+            style={styles.officialLogo}
+            resizeMode="contain"
+            accessibilityLabel="Blarney Castle and Gardens logo"
+          />
+        </View>
 
-  <View style={styles.headerSide}>
-    <Image
-    // -  static require path so bundlers can include it
-      source={require("../../assets/images/blarney-logo2.png")}
-      style={styles.logo}
-      resizeMode="contain"
-    />
-  </View>
-</View>
+
+        {/* right spacer to keep logo centered */}
+        <View style={styles.rightSpacer} />
+      </View>
 
       {SHOW_DEV_STATUS ? (
         <Text style={styles.devStatus}>
@@ -181,68 +155,82 @@ export default function HomeScreen() {
         </Text>
       ) : null}
 
-      
-      <View style={styles.contentWrapper}>
-        <Image
-          source={require("../../assets/images/castle_left_overly_flipped.png")} 
-          style={styles.bgOverlay}
-          resizeMode="contain"
-        />
-
-        <ScrollView
-          contentContainerStyle={styles.content}
-          refreshControl={
-            <RefreshControl
-              tintColor={colors.textLight}
-              colors={[colors.textLight]}
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Row of large circular quick access buttons */}
-          <View style={styles.quickLinksRow}>
-            <Pressable
-              style={styles.quickLinkButton}
-              onPress={() => router.push("/navigation" as Href)}
-              accessibilityLabel="Open map and navigation"
-            >
-              <Ionicons name="location-outline" size={35} color={colors.brand} />
-              <Text style={styles.quickLinkLabel}>Map</Text>
-            </Pressable>
-
-            <Pressable
-              style={styles.quickLinkButton}
-              onPress={() => router.push("/info" as Href)}
-              accessibilityLabel="Open information page"
-            >
-              <Ionicons
-                name="information-circle-outline"
-                size={35}
-                color={colors.brand}
+      {/* Background image section */}
+      <ImageBackground
+        source={require("../../assets/images/castle_background.png")}
+        style={styles.bg}
+        resizeMode="cover"
+      >
+        {/* subtle overlay to improve readability */}
+        <View style={styles.bgTint}>
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.content}
+            refreshControl={
+              <RefreshControl
+                tintColor={colors.textLight}
+                colors={[colors.textLight]}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
               />
-              <Text style={styles.quickLinkLabel}>Info</Text>
-            </Pressable>
-          </View>
-          <Pill
-            title="GET TICKETS HERE:"
-            value="Click to Open"
-            onPress={() => openTicketLink(ticketsUrl)}
-          />
-          <Pill title="CASTLE QUEUE WAIT:" value={queue} />
-          <Pill title="CAR PARK STATUS:" value={carpark} />
-          <Pill title="CLOSING TIME:" value={closing} />
-          <Pill title="LAST ADMISSION:" value={last} />
-        </ScrollView>
-      </View>
+            }
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Map + Info cards */}
+            <View style={styles.quickLinksRow}>
+              <Pressable
+                style={styles.quickLinkButton}
+                onPress={() => router.push("/navigation" as Href)}
+                accessibilityLabel="Open map and navigation"
+              >
+                <Ionicons
+                  name="location-outline"
+                  size={40}
+                  color={colors.brand}
+                />
+                <Text style={styles.quickLinkLabel}>Map</Text>
+              </Pressable>
 
+              <Pressable
+                style={styles.quickLinkButton}
+                onPress={() => router.push("/info" as Href)}
+                accessibilityLabel="Open information page"
+              >
+                <Ionicons
+                  name="information-circle-outline"
+                  size={40}
+                  color={colors.brand}
+                />
+                <Text style={styles.quickLinkLabel}>Info</Text>
+              </Pressable>
+            </View>
+
+            {/* Green ticket CTA */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.ticketCta,
+                pressed ? { opacity: 0.92, transform: [{ scale: 0.99 }] } : null,
+              ]}
+              onPress={() => openTicketLink(ticketsUrl)}
+              accessibilityLabel="Get tickets"
+              accessibilityHint="Opens the ticket website in your browser"
+            >
+              <Text style={styles.ticketCtaText}>Get Tickets Here</Text>
+            </Pressable>
+
+            {/* Info pills (white) */}
+            <Pill title="CASTLE QUEUE TIME" value={queue} />
+            <Pill title="CAR PARK STATUS" value={carpark} />
+            <Pill title="CLOSING TIME" value={closing} />
+            <Pill title="LAST ADMISSION" value={last} />
+          </ScrollView>
+        </View>
+      </ImageBackground>
 
       <SlideMenu
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}
         onSelect={(label: string) => {
-          
           const path: Record<string, Href> = {
             HOME: "/" as Href,
             NAVIGATION: "/navigation" as Href,
@@ -253,203 +241,182 @@ export default function HomeScreen() {
           };
 
           if (label === "INFO") {
-            // Force reset to the main Info page
             router.replace("/info");
           } else {
             router.push(path[label] ?? ("/" as Href));
           }
-
           setMenuOpen(false);
         }}
       />
     </SafeAreaView>
   );
 }
-// — Platform-specific font fallback. Platform.select lets web use a CSS fallback list
-const serif = Platform.select({
-  ios: "Times New Roman",
-  android: "serif",
-  web: "Times New Roman, serif", 
-});
 
 const styles = StyleSheet.create({
-  // containers
   container: {
     flex: 1,
-    backgroundColor: colors.brand,
+    backgroundColor: "white",
   },
   center: {
     justifyContent: "center",
     alignItems: "center",
   },
 
-  // header
-  header: {
-    backgroundColor: colors.brand,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 12,
-    height: Platform.select({ web: 120, default: 88 }),
-  },
-  headerSide: {
-    width: 66,
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logo: {
-    width: Platform.select({ web: 72, default: 70 }),
-    height: Platform.select({ web: 72, default: 74 }),
-  },
-  titleContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerTitle: {
-    color: colors.textLight,
-    fontSize: Platform.select({ web: 30, default: 24 }),
-    fontWeight: "800",
-    textAlign: "center",
-    fontFamily: serif,
-    lineHeight: Platform.select({ web: 38, default: 30 }),
-  },
-  headerSubtitle: {
-    color: colors.textLight,
-    fontSize: Platform.select({ web: 30, default: 24 }),
-    fontWeight: "800",
-    textAlign: "center",
-    fontFamily: serif,
-    lineHeight: Platform.select({ web: 38, default: 30 }),
-    marginTop: Platform.select({ web: -4, default: -2 }),
-  },
-  burger: {
-    width: 34,
-    height: 24,
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  line: {
-    width: 26,
-    height: 3,
-    borderRadius: 2,
-    backgroundColor: colors.textLight,
-  },
+    topBar: {
+      backgroundColor: "white",
+      height: 110,
+      justifyContent: "center",
+      position: "relative",
+    },
+
+    menuButton: {
+      position: "absolute",
+      left: 10,
+      top: 20,
+      width: 70,
+      height: 70,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 15,
+      zIndex: 10,
+    },
+
+    officialLogo: {
+      position: "absolute",
+      alignSelf: "center",
+      top: 3,
+      height: 110,    
+      width: 410,    
+    },
+
+      logoWrap: {
+        position: "absolute",
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: "center",
+        justifyContent: "center",
+      },
+
+    rightSpacer: {
+      width: 44,
+      height: 44,
+    },
+    
+    scroll: {
+     flex: 1,
+    },
+
 
   devStatus: {
-    color: colors.textLight,
+    color: "#1A1A1A",
+    backgroundColor: "white",
     textAlign: "center",
-    opacity: 0.7,
-    marginBottom: Platform.select({ web: 12, default: 6 }),
+    paddingBottom: 6,
+    opacity: 0.6,
   },
 
-  // wrapper for content area (overlay + ScrollView)
-  contentWrapper: {
+  // Background area
+  bg: {
     flex: 1,
-    backgroundColor: colors.brand,
+  },
+  bgTint: {
+    flex: 1,
+    backgroundColor: "rgba(255,255,255,0.00)",
   },
 
-  // overlay image behind the tiles
-  bgOverlay: {
-    position: "absolute",
-    right: -15,
-    top: -30,
-    bottom: 0,
-    width: "100%", 
-    opacity: 0.8,
-    // @ts-ignore – keep touches going to the ScrollView
-    pointerEvents: "none",
+  // Scroll content padding
+  content: {
+    paddingTop: 28,
+    paddingBottom: 36,
+    flexGrow: 1,
   },
 
-  // pills
-  pill: Platform.select({
-    web: {
-      backgroundColor: colors.pill,
-      borderRadius: 22,
-      paddingVertical: 18,
-      paddingHorizontal: 20,
-      marginBottom: 20,
-      shadowColor: "#000",
-      shadowOpacity: 0.12,
-      shadowRadius: 8,
-      shadowOffset: { width: 0, height: 2 },
-    },
-    default: {
-      backgroundColor: colors.pill,
-      borderRadius: 22,
-      paddingVertical: 18,
-      paddingHorizontal: 20,
-      marginBottom: 18,
-    },
-  }),
-  pillTitle: {
-    color: colors.textDark,
-    fontWeight: "bold",
-    marginBottom: 6,
-    fontSize: Platform.select({ web: 18, default: 15 }),
-  },
-  pillValue: {
-    color: colors.textDark,
-    fontSize: Platform.select({ web: 18, default: 16 }),
-  },
-
-  // content area spacing (ScrollView inner padding)
-    content: Platform.select({
-    web: {
-      maxWidth: 1100,
-      width: "100%",
-      alignSelf: "center",
-      paddingLeft: 24,
-      paddingRight: 24,
-      paddingBottom: 56,
-      paddingTop: 28,
-    },
-    default: {
-      paddingHorizontal: 20,
-      paddingBottom: 40,
-      paddingTop: 20,
-    },
-  }),
-
-  // Map & Info buttons
+  // Map/Info cards
   quickLinksRow: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: -8,
-    marginBottom: 26,
+    marginBottom: 14,
   },
-
   quickLinkButton: {
     backgroundColor: "rgba(255,255,255,0.92)",
-    borderRadius: 28,
-    paddingVertical: 24,
-    paddingHorizontal: 30,
+    borderRadius: 22,
+    paddingVertical: 18,
+    paddingHorizontal: 22,
     alignItems: "center",
     justifyContent: "center",
-    minWidth: 135,
-    minHeight: 135,
-    marginHorizontal: 7, 
+    minWidth: 115,
+    minHeight: 105,
+    marginHorizontal: 10,
 
     // iOS shadow
     shadowColor: "#000",
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.16,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
 
     // Android shadow
     elevation: 5,
 
-    // subtle border
     borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.05)",
+    borderColor: "rgba(0,0,0,0.06)",
+  },
+  quickLinkLabel: {
+    marginTop: 8,
+    color: colors.brand,
+    fontSize: 30,
+    fontFamily: serif,
   },
 
-  quickLinkLabel: {
-    marginTop: 10,
-    color: colors.brand,
-    fontSize: 28,
-    fontFamily: serif, 
+  // Green Tickets
+  ticketCta: {
+    alignSelf: "center",
+    width: "66%",
+    backgroundColor: colors.brand,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 70,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.16,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
+  },
+  ticketCtaText: {
+    color: "white",
+    fontSize: 25,
+    fontFamily: serif,
+    letterSpacing: 0.2,
+  },
+
+  // White pills
+  pill: {
+    alignSelf: "center",
+    width: "82%",
+    backgroundColor: "rgba(255,255,255,0.92)",
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 14,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
+  },
+  pillTitle: {
+    color: "#111",
+    fontSize: 14,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+  pillValue: {
+    color: "#111",
+    fontSize: 16,
   },
 });
-
