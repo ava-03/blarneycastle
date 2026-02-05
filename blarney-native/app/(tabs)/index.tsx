@@ -22,6 +22,7 @@ import { colors } from "../../constants/colors";
 import SlideMenu from "../../components/slidemenu";
 import { router, type Href } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { Asset } from "expo-asset";
 
 const SHOW_DEV_STATUS = false;
 
@@ -54,6 +55,10 @@ export default function HomeScreen() {
       // silent fail -> UI falls back to N/A
     }
   };
+
+const bgModule = require("../../assets/images/castle_background.png");
+const bgUri = Asset.fromModule(bgModule).uri;
+
 
   useEffect(() => {
     (async () => {
@@ -111,6 +116,9 @@ export default function HomeScreen() {
     </Pressable>
   );
 
+const bgResizeMode = Platform.OS === "web" ? "contain" : "cover";
+
+
   if (loading) {
     return (
       <View style={[styles.container, styles.center]}>
@@ -156,76 +164,129 @@ export default function HomeScreen() {
       ) : null}
 
       {/* Background image section */}
-      <ImageBackground
-        source={require("../../assets/images/castle_background.png")}
-        style={styles.bg}
-        resizeMode="cover"
+      {Platform.OS === "web" ? (
+      <View
+      style={[
+        styles.webBg,
+        { backgroundImage: `url("${bgUri}")` } as any,
+      ]}
+    >
+    <View style={styles.bgTint}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl
+            tintColor={colors.textLight}
+            colors={[colors.textLight]}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        showsVerticalScrollIndicator={false}
       >
-        {/* subtle overlay to improve readability */}
-        <View style={styles.bgTint}>
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.content}
-            refreshControl={
-              <RefreshControl
-                tintColor={colors.textLight}
-                colors={[colors.textLight]}
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-              />
-            }
-            showsVerticalScrollIndicator={false}
+        {/* Map + Info cards */}
+        <View style={styles.quickLinksRow}>
+          <Pressable
+            style={styles.quickLinkButton}
+            onPress={() => router.push("/navigation" as Href)}
+            accessibilityLabel="Open map and navigation"
           >
-            {/* Map + Info cards */}
-            <View style={styles.quickLinksRow}>
-              <Pressable
-                style={styles.quickLinkButton}
-                onPress={() => router.push("/navigation" as Href)}
-                accessibilityLabel="Open map and navigation"
-              >
-                <Ionicons
-                  name="location-outline"
-                  size={40}
-                  color={colors.brand}
-                />
-                <Text style={styles.quickLinkLabel}>Map</Text>
-              </Pressable>
+            <Ionicons name="location-outline" size={34} color={colors.brand} />
+            <Text style={styles.quickLinkLabel}>Map</Text>
+          </Pressable>
 
-              <Pressable
-                style={styles.quickLinkButton}
-                onPress={() => router.push("/info" as Href)}
-                accessibilityLabel="Open information page"
-              >
-                <Ionicons
-                  name="information-circle-outline"
-                  size={40}
-                  color={colors.brand}
-                />
-                <Text style={styles.quickLinkLabel}>Info</Text>
-              </Pressable>
-            </View>
+          <Pressable
+            style={styles.quickLinkButton}
+            onPress={() => router.push("/info" as Href)}
+            accessibilityLabel="Open information page"
+          >
+            <Ionicons
+              name="information-circle-outline"
+              size={34}
+              color={colors.brand}
+            />
+            <Text style={styles.quickLinkLabel}>Info</Text>
+          </Pressable>
+        </View>
 
-            {/* Green ticket CTA */}
+        <Pressable
+          style={styles.ticketCta}
+          onPress={() => openTicketLink(ticketsUrl)}
+          accessibilityLabel="Get tickets"
+        >
+          <Text style={styles.ticketCtaText}>Get Tickets Here</Text>
+        </Pressable>
+
+        <Pill title="CASTLE QUEUE TIME" value={queue} />
+        <Pill title="CAR PARK STATUS" value={carpark} />
+        <Pill title="CLOSING TIME" value={closing} />
+        <Pill title="LAST ADMISSION" value={last} />
+      </ScrollView>
+    </View>
+  </View>
+) : (
+    <ImageBackground
+      source={bgModule}
+      style={styles.bg}
+      resizeMode="cover"
+    >
+      <View style={styles.bgTint}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.content}
+          refreshControl={
+            <RefreshControl
+              tintColor={colors.textLight}
+              colors={[colors.textLight]}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Map + Info cards */}
+          <View style={styles.quickLinksRow}>
             <Pressable
-              style={({ pressed }) => [
-                styles.ticketCta,
-                pressed ? { opacity: 0.92, transform: [{ scale: 0.99 }] } : null,
-              ]}
-              onPress={() => openTicketLink(ticketsUrl)}
-              accessibilityLabel="Get tickets"
-              accessibilityHint="Opens the ticket website in your browser"
+              style={styles.quickLinkButton}
+              onPress={() => router.push("/navigation" as Href)}
+              accessibilityLabel="Open map and navigation"
             >
-              <Text style={styles.ticketCtaText}>Get Tickets Here</Text>
+              <Ionicons name="location-outline" size={34} color={colors.brand} />
+              <Text style={styles.quickLinkLabel}>Map</Text>
             </Pressable>
 
-            {/* Info pills (white) */}
-            <Pill title="CASTLE QUEUE TIME" value={queue} />
-            <Pill title="CAR PARK STATUS" value={carpark} />
-            <Pill title="CLOSING TIME" value={closing} />
-            <Pill title="LAST ADMISSION" value={last} />
-          </ScrollView>
-        </View>
-      </ImageBackground>
+            <Pressable
+              style={styles.quickLinkButton}
+              onPress={() => router.push("/info" as Href)}
+              accessibilityLabel="Open information page"
+            >
+              <Ionicons
+                name="information-circle-outline"
+                size={34}
+                color={colors.brand}
+              />
+              <Text style={styles.quickLinkLabel}>Info</Text>
+            </Pressable>
+          </View>
+
+          <Pressable
+            style={styles.ticketCta}
+            onPress={() => openTicketLink(ticketsUrl)}
+            accessibilityLabel="Get tickets"
+          >
+            <Text style={styles.ticketCtaText}>Get Tickets Here</Text>
+          </Pressable>
+
+          <Pill title="CASTLE QUEUE TIME" value={queue} />
+          <Pill title="CAR PARK STATUS" value={carpark} />
+          <Pill title="CLOSING TIME" value={closing} />
+          <Pill title="LAST ADMISSION" value={last} />
+        </ScrollView>
+      </View>
+    </ImageBackground>
+  )}
+
 
       <SlideMenu
         visible={menuOpen}
@@ -419,4 +480,10 @@ const styles = StyleSheet.create({
     color: "#111",
     fontSize: 16,
   },
+
+webBg: {
+  flex: 1,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+},
 });
