@@ -28,6 +28,9 @@ REFERENCES:
 // https://www.youtube.com/watch?v=Ts3kTbdQ_4U
 // https://www.youtube.com/watch?v=22uJhH1S8fU
 // https://www.youtube.com/watch?v=RIO5YFxH_ik
+// https://reactnative.dev/docs/imagebackground
+// https://www.bing.com/videos/riverview/relatedvideo?q=setting+an+image+as+a+background+on+react+native+with+expo&&mid=DB861F2C03D1A6B6B2D7DB861F2C03D1A6B6B2D7&churl=https%3a%2f%2fwww.youtube.com%2fchannel%2fUCwJWXcI12lhcorzG7Vrf2zw&mmscn=mtsc&aps=28&FORM=VMSOVR
+// https://www.youtube.com/watch?v=czhLCGuu_AU&t=323s
 
 
 app/(tabs)/audio/index.tsx

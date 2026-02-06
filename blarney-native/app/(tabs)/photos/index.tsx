@@ -1,4 +1,3 @@
-// app/(tabs)/photos/index.tsx
 // https://reactnative.dev/docs/pressable
 // https://reactnative.dev/docs/safeareaview
 // https://reactnative.dev/docs/image#static-image-resources
@@ -6,8 +5,8 @@
 // https://expo.github.io/router/docs
 // https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
 // https://docs.expo.dev/router/introduction/
+// https://reactnavigation.org/docs/drawer-navigator/
 
-// app/(tabs)/photos/index.tsx
 
 import React, { useState } from "react";
 import {
@@ -36,6 +35,10 @@ const serif = Platform.select({
 });
 
 // website link
+// Opens digital photo website in browser
+// Checks if URL is supported before opening
+// Shows alert if link fails
+
 const DIGITAL_PHOTO_URL =
   "https://www.snaphappysystems.com/blarney/digicopy-form.php";
 
