@@ -5,24 +5,24 @@
 // https://expo.github.io/router/docs
 // https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
 // https://docs.expo.dev/router/introduction/
+// https://reactnavigation.org/docs/drawer-navigator/
 
 import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
-  Text,
   StyleSheet,
   Pressable,
   StatusBar,
   Platform,
-  Image
+  Image,
 } from "react-native";
 import { colors } from "../../../constants/colors";
 import SlideMenu from "../../../components/slidemenu";
 import { router, type Href } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
-// -- Cross platform serif choice - web includes CSS fallback list.
-// -- Platform.select is the way to branch styles per platform
+// — Platform-specific serif fallback 
 const serif = Platform.select({
   ios: "Times New Roman",
   android: "serif",
@@ -30,88 +30,111 @@ const serif = Platform.select({
 });
 
 export default function AudioScreen() {
-  // -- Local UI stat - whether slide out menu is visible
   const [menuOpen, setMenuOpen] = useState(false);
-  const HEADER_HEIGHT = 88;
 
   return (
-    // -- SafeAreaView ensures header isnt obscured by system UI
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.brand }}>
-      <StatusBar barStyle="light-content" />
+    <SafeAreaView style={s.container}>
+      {/* White top area */}
+      <StatusBar barStyle="dark-content" />
 
-      {/* Header */}
-            <View style={[s.header, { height: HEADER_HEIGHT }]}>
-              <Pressable 
-                onPress={() => setMenuOpen(true)} 
-                style={s.headerSide}
-                accessibilityLabel="Open menu"
-              >
-                <View style={s.burger}>
-                  <View style={s.line} />
-                  <View style={s.line} />
-                  <View style={s.line} />
-                </View>
-              </Pressable>
-      
-              <Text style={s.headerText}>NATURE</Text>
-      
-              <View style={s.headerSide}>
-                <Image
-                  source={require("../../../assets/images/blarney-logo2.png")}
-                  style={s.logo}
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
-      
-            {/* Slide-out menu */}
-            <SlideMenu
-              visible={menuOpen}
-              onClose={() => setMenuOpen(false)}
-              onSelect={(label: string) => {
-                const path: Record<string, Href> = {
-                  HOME: "/" as Href,
-                  NAVIGATION: "../navigation" as Href,
-                  INFO: "../info" as Href,
-                  NATURE: "../nature" as Href,
-                  "AUDIO TOUR": "../audio" as Href,
-                  PHOTOS: "../photos" as Href,
-                };
-      
-                router.push(path[label] ?? ("/" as Href));
-                setMenuOpen(false);
-              }}
-            />
-          </SafeAreaView>
-        );
-      }
-      
-      const s = StyleSheet.create({
-        header: {
-          backgroundColor: colors.brand,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingHorizontal: 30,
-        },
-        headerSide: {
-          width: 40,
-          height: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-        },
-        headerText: { 
-          color: colors.textLight, 
-          fontSize: 28, 
-          fontWeight: "800", 
-          fontFamily: serif,
-          flex: 1,
-          textAlign: "center",
-        },
-        burger: { width: 34, height: 24, alignItems: "center", justifyContent: "space-between" },
-        line: { width: 26, height: 3, backgroundColor: colors.textLight, borderRadius: 2 },
-        logo: {
-          width: Platform.select({ web: 62, default: 74 }),
-          height: Platform.select({ web: 62, default: 74 }),
-        },
-      });
+      {/* Top white header  */}
+      <View style={s.topBar}>
+        <Pressable
+          accessibilityLabel="Open menu"
+          onPress={() => setMenuOpen(true)}
+          style={s.menuButton}
+        >
+          <Ionicons name="menu" size={36} color={colors.brand} />
+        </Pressable>
+
+        <View pointerEvents="none" style={s.logoWrap}>
+          <Image
+            source={require("../../../assets/images/logo-white.png")}
+            style={s.officialLogo}
+            resizeMode="contain"
+            accessibilityLabel="Blarney Castle and Gardens logo"
+          />
+        </View>
+
+        {/* right spacer to keep logo centered */}
+        <View style={s.rightSpacer} />
+      </View>
+
+      {/* page content  */}
+      <View style={s.body} />
+
+      <SlideMenu
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onSelect={(label: string) => {
+          const path: Record<string, Href> = {
+            HOME: "/" as Href,
+            NAVIGATION: "../navigation" as Href,
+            INFO: "../info" as Href,
+            NATURE: "../nature" as Href,
+            "AUDIO TOUR": "../audio" as Href,
+            PHOTOS: "../photos" as Href,
+          };
+
+          router.push(path[label] ?? ("/" as Href));
+          setMenuOpen(false);
+        }}
+      />
+    </SafeAreaView>
+  );
+}
+
+const s = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+
+  body: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+
+  // ---- Header styles  ----
+  topBar: {
+    backgroundColor: "white",
+    height: 110,
+    justifyContent: "center",
+    position: "relative",
+  },
+
+  menuButton: {
+    position: "absolute",
+    left: 10,
+    top: 20,
+    width: 70,
+    height: 70,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 15,
+    zIndex: 10,
+  },
+
+  logoWrap: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  officialLogo: {
+    position: "absolute",
+    alignSelf: "center",
+    top: 3,
+    height: 110,
+    width: 410,
+  },
+
+  rightSpacer: {
+    width: 44,
+    height: 44,
+  },
+});

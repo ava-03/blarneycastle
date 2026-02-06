@@ -39,8 +39,7 @@ import {
 import { colors } from "../../../constants/colors";
 import SlideMenu from "../../../components/slidemenu";
 import { router, type Href, Link } from "expo-router";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-
+import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
 
 const serif = Platform.select({
   ios: "Times New Roman",
@@ -48,7 +47,13 @@ const serif = Platform.select({
   web: "Times New Roman, serif",
 });
 
-// All accordian section IDs
+
+const infoTitleFont = Platform.select({
+  ios: "System",
+  android: "sans-serif-medium",
+  web: "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
+});
+
 type SectionId =
   | "tickets"
   | "opening"
@@ -56,7 +61,6 @@ type SectionId =
   | "shopping"
   | "dining"
   | "about"
-  | "weather"
   | "parking"
   | "directions"
   | "safety"
@@ -65,50 +69,38 @@ type SectionId =
   | "hello";
 
 export default function InfoScreen() {
-  // controls slide out menu visibility
   const [menuOpen, setMenuOpen] = useState(false);
-  // controls which accordian is open
   const [openSection, setOpenSection] = useState<SectionId | null>(null);
-  const HEADER_HEIGHT = Platform.select({ web: 120, default: 88 });
 
-// Toggle logic for accordian
   const toggleSection = (id: SectionId) => {
     setOpenSection((prev) => (prev === id ? null : id));
   };
 
   return (
-    // safe area & background
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.brand }}>
-      <StatusBar barStyle="light-content" />
+    <SafeAreaView style={s.container}>
+      <StatusBar barStyle="dark-content" />
 
-      {/* Header */}
-      <View style={[s.header, { height: HEADER_HEIGHT }]}>
+      {/* Top white header  */}
+      <View style={s.topBar}>
         <Pressable
           accessibilityLabel="Open menu"
           onPress={() => setMenuOpen(true)}
-          style={s.headerSide}
+          style={s.menuButton}
         >
-          <View style={s.burger}>
-            <View style={s.line} />
-            <View style={s.line} />
-            <View style={s.line} />
-          </View>
+          <Ionicons name="menu" size={36} color={colors.brand} />
         </Pressable>
 
-        <View style={s.titleContainer}>
-          <Text style={s.headerTitle}>BLARNEY CASTLE</Text>
-          <Text style={s.headerSubtitle}>& GARDENS</Text>
-        </View>
-
-        <View style={s.headerSide}>
+        <View pointerEvents="none" style={s.logoWrap}>
           <Image
-            source={require("../../../assets/images/blarney-logo2.png")}
-            style={s.logo}
+            source={require("../../../assets/images/logo-white.png")}
+            style={s.officialLogo}
             resizeMode="contain"
+            accessibilityLabel="Blarney Castle and Gardens logo"
           />
         </View>
-      </View>
 
+        <View style={s.rightSpacer} />
+      </View>
 
       {/* Main content */}
       <View style={s.contentWrapper}>
@@ -170,7 +162,6 @@ export default function InfoScreen() {
             </Link>
           </AccordionPill>
 
-
           {/* Opening Times */}
           <AccordionPill
             title="OPENING TIMES"
@@ -212,14 +203,12 @@ export default function InfoScreen() {
             </Text>
           </AccordionPill>
 
-
           {/* FAQ’s */}
           <AccordionPill
             title="FAQ'S"
             open={openSection === "faqs"}
             onPress={() => toggleSection("faqs")}
           >
-            {/* FAQ pairs rendered in a loop */}
             <View>
               {[
                 [
@@ -230,10 +219,7 @@ export default function InfoScreen() {
                   "Do you have timed slots?",
                   "No, we do not have timed slots. You can visit any time during our opening hours.",
                 ],
-                [
-                  "Do you accept credit cards?",
-                  "Yes, we accept Visa and Mastercard.",
-                ],
+                ["Do you accept credit cards?", "Yes, we accept Visa and Mastercard."],
                 [
                   "How long does a visit take?",
                   "To explore the Castle and 100 acres of gardens, we recommend at least 3 hours.",
@@ -254,10 +240,7 @@ export default function InfoScreen() {
                   "Is a student/college I.D. required?",
                   "Yes, a valid student ID is required to purchase a student ticket.",
                 ],
-                [
-                  "What age qualifies for a child ticket?",
-                  "Anyone aged 6–16.",
-                ],
+                ["What age qualifies for a child ticket?", "Anyone aged 6–16."],
                 [
                   "Can children kiss the Stone?",
                   "Yes, but children under the age of 8 are at the discretion of the staff member.",
@@ -270,14 +253,8 @@ export default function InfoScreen() {
                   "Are bicycles allowed?",
                   "No, bicycles, scooters, roller blades or ball games are not allowed within the park.",
                 ],
-                [
-                  "Can you fly drones?",
-                  "No. As a private estate, drones are not permitted.",
-                ],
-                [
-                  "Are tickets refundable?",
-                  "Tickets are non-refundable, but we can offer a change of date.",
-                ],
+                ["Can you fly drones?", "No. As a private estate, drones are not permitted."],
+                ["Are tickets refundable?", "Tickets are non-refundable, but we can offer a change of date."],
                 [
                   "Do you have a car park on site?",
                   "Yes. Parking is a €2 flat fee for the duration of your visit. The car park closes at our designated closing time; vehicles released after this incur a €50 penalty. No overnight parking.",
@@ -295,7 +272,6 @@ export default function InfoScreen() {
             </View>
           </AccordionPill>
 
-
           {/* Shopping */}
           <AccordionPill
             title="SHOPPING"
@@ -312,7 +288,7 @@ export default function InfoScreen() {
                 s.bodyText,
                 {
                   marginTop: 10,
-                  color: "#EA9627",           
+                  color: "#EA9627",
                   textDecorationLine: "underline",
                   fontWeight: "600",
                 },
@@ -322,7 +298,6 @@ export default function InfoScreen() {
             </Link>
           </AccordionPill>
 
-
           {/* Dining */}
           <AccordionPill
             title="DINING"
@@ -331,11 +306,9 @@ export default function InfoScreen() {
           >
             <Text style={s.bodyText}>
               Enjoy a bite to eat at the Stable Yard Café, located at no.8 on the map,
-              or grab a quick drink and snack from our coffee hut just inside the
-              entrance.
+              or grab a quick drink and snack from our coffee hut just inside the entrance.
             </Text>
           </AccordionPill>
-
 
           {/* ABOUT */}
           <AccordionPill
@@ -367,18 +340,6 @@ export default function InfoScreen() {
             </Link>
           </AccordionPill>
 
-
-          {/* Weather placeholder */}
-          <AccordionPill
-            title="WEATHER"
-            open={openSection === "weather"}
-            onPress={() => toggleSection("weather")}
-          >
-            <Text style={s.bodyText}>
-              TBC
-            </Text>
-          </AccordionPill>
-
           {/* Parking */}
           <AccordionPill
             title="PARKING"
@@ -398,7 +359,6 @@ export default function InfoScreen() {
               not permitted.
             </Text>
           </AccordionPill>
-
 
           {/* Directions & Travel Information */}
           <AccordionPill
@@ -470,7 +430,6 @@ export default function InfoScreen() {
             </View>
           </AccordionPill>
 
-
           {/* Safety */}
           <AccordionPill
             title="SAFETY"
@@ -490,11 +449,7 @@ export default function InfoScreen() {
             <Text style={s.bodyText}>
               Our trained First Aid team is available during opening hours. For any
               assistance, please contact the castle office at{" "}
-              
-              <Link
-                href="tel:+353214385252"
-                style={[s.bodyLink]}
-              >
+              <Link href="tel:+353214385252" style={[s.bodyLink]}>
                 00 353 21 438 5252
               </Link>
               .
@@ -513,40 +468,37 @@ export default function InfoScreen() {
           </AccordionPill>
 
           {/* Experiences in Cork */}
-            <AccordionPill
-              title="EXPERIENCES IN CORK"
-              open={openSection === "cork"}
-              onPress={() => toggleSection("cork")}
+          <AccordionPill
+            title="EXPERIENCES IN CORK"
+            open={openSection === "cork"}
+            onPress={() => toggleSection("cork")}
+          >
+            <Text style={s.bodyText}>
+              Explore 10 unforgettable experiences across Cork - from whale watching on
+              the coast to historic sites and city favourites.
+            </Text>
+
+            <Pressable
+              style={s.subButton}
+              onPress={() => router.push("/info/expcork" as Href)}
+              accessibilityLabel="View 10 not-to-miss experiences in Cork"
             >
-              <Text style={s.bodyText}>
-                Explore 10 unforgettable experiences across Cork - from whale watching on
-                the coast to historic sites and city favourites.
-              </Text>
-
-              <Pressable
-                style={s.subButton}
-                onPress={() => router.push("/info/expcork" as Href)}
-                accessibilityLabel="View 10 not-to-miss experiences in Cork"
-              >
-                <Text style={s.subButtonText}>View experiences</Text>
-              </Pressable>
-            </AccordionPill>
-
-
+              <Text style={s.subButtonText}>View experiences</Text>
+            </Pressable>
+          </AccordionPill>
 
           {/* Historical Attractions in Ireland */}
-            <AccordionPill
-              title="HISTORICAL ATTRACTIONS IN IRELAND"
-              open={openSection === "history"}
-              onPress={() => toggleSection("history")}
-            >
-              <Text style={s.bodyText}>Explore Ireland’s most iconic historical sites.</Text>
+          <AccordionPill
+            title="HISTORICAL ATTRACTIONS IN IRELAND"
+            open={openSection === "history"}
+            onPress={() => toggleSection("history")}
+          >
+            <Text style={s.bodyText}>Explore Ireland’s most iconic historical sites.</Text>
 
-              <Pressable onPress={() => router.push("/info/attractionsireland")}>
-                <Text style={s.linkText}>View the full guide →</Text>
-              </Pressable>
-            </AccordionPill>
-
+            <Pressable onPress={() => router.push("/info/attractionsireland")}>
+              <Text style={s.linkText}>View the full guide →</Text>
+            </Pressable>
+          </AccordionPill>
 
           {/* Say Hello */}
           <AccordionPill
@@ -554,7 +506,6 @@ export default function InfoScreen() {
             open={openSection === "hello"}
             onPress={() => toggleSection("hello")}
           >
-            {/* Phone & Email text links */}
             <Link href="tel:+353214385252" style={s.linkText}>
               Phone – 00 353 21 438 5252
             </Link>
@@ -563,46 +514,31 @@ export default function InfoScreen() {
               Email – info@blarneycastle.ie
             </Link>
 
-            {/* Social icons row */}
             <View style={s.socialRow}>
-              {/* Facebook */}
-              <Link
-                href="https://www.facebook.com/blarneycastleireland"
-                asChild
-              >
+              <Link href="https://www.facebook.com/blarneycastleireland" asChild>
                 <Pressable style={s.socialIconButton}>
                   <FontAwesome name="facebook-f" style={s.socialIcon} />
                 </Pressable>
               </Link>
 
-              {/* X / Twitter */}
               <Link href="https://x.com/blarney_castle" asChild>
                 <Pressable style={s.socialIconButton}>
                   <FontAwesome name="twitter" style={s.socialIcon} />
                 </Pressable>
               </Link>
 
-              {/* YouTube */}
-              <Link
-                href="https://www.youtube.com/@theblarneycastle"
-                asChild
-              >
+              <Link href="https://www.youtube.com/@theblarneycastle" asChild>
                 <Pressable style={s.socialIconButton}>
                   <FontAwesome name="youtube-play" style={s.socialIcon} />
                 </Pressable>
               </Link>
 
-              {/* Instagram */}
-              <Link
-                href="https://www.instagram.com/blarneycastleandgardens/"
-                asChild
-              >
+              <Link href="https://www.instagram.com/blarneycastleandgardens/" asChild>
                 <Pressable style={s.socialIconButton}>
                   <FontAwesome name="instagram" style={s.socialIcon} />
                 </Pressable>
               </Link>
 
-              {/* TripAdvisor */}
               <Link
                 href="https://www.tripadvisor.co.uk/Attraction_Review-g186599-d214817-Reviews-Blarney_Castle_Gardens-Blarney_Cork_County_Cork.html"
                 asChild
@@ -613,12 +549,9 @@ export default function InfoScreen() {
               </Link>
             </View>
           </AccordionPill>
-
-
         </ScrollView>
       </View>
 
-      {/* Slide-out menu */}
       <SlideMenu
         visible={menuOpen}
         onClose={() => setMenuOpen(false)}
@@ -631,20 +564,19 @@ export default function InfoScreen() {
             "AUDIO TOUR": "/audio" as Href,
             PHOTOS: "/photos" as Href,
           };
-          // INFO always resets back to main info page
+
           if (label === "INFO") {
             router.replace("/info");
           } else {
             router.push(path[label] ?? ("/" as Href));
           }
-
           setMenuOpen(false);
         }}
       />
     </SafeAreaView>
   );
 }
-// reusable accordian pill component
+
 function AccordionPill({
   title,
   open,
@@ -666,83 +598,79 @@ function AccordionPill({
     </View>
   );
 }
-// styles
-  const s = StyleSheet.create({
-// header
-  header: {
-    backgroundColor: colors.brand,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 12,
-    height: Platform.select({ web: 120, default: 88 }),
-  },
-  headerSide: {
-    width: 66,
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logo: {
-    width: Platform.select({ web: 72, default: 70 }),
-    height: Platform.select({ web: 72, default: 74 }),
-  },
-  titleContainer: {
+
+const s = StyleSheet.create({
+  container: {
     flex: 1,
+    backgroundColor: "white",
+  },
+
+  // ---- Header styles  ----
+  topBar: {
+    backgroundColor: "white",
+    height: 110,
+    justifyContent: "center",
+    position: "relative",
+  },
+  menuButton: {
+    position: "absolute",
+    left: 10,
+    top: 20,
+    width: 70,
+    height: 70,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 15,
+    zIndex: 10,
+  },
+  officialLogo: {
+    position: "absolute",
+    alignSelf: "center",
+    top: 3,
+    height: 110,
+    width: 410,
+  },
+  logoWrap: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
     alignItems: "center",
     justifyContent: "center",
   },
-  headerTitle: {
-    color: colors.textLight,
-    fontSize: Platform.select({ web: 30, default: 24 }),
-    fontWeight: "800",
-    textAlign: "center",
-    fontFamily: serif,
-    lineHeight: Platform.select({ web: 38, default: 30 }),
+  rightSpacer: {
+    width: 44,
+    height: 44,
   },
-  headerSubtitle: {
-    color: colors.textLight,
-    fontSize: Platform.select({ web: 30, default: 24 }),
-    fontWeight: "800",
-    textAlign: "center",
-    fontFamily: serif,
-    lineHeight: Platform.select({ web: 38, default: 30 }),
-    marginTop: Platform.select({ web: -4, default: -2 }),
-  },
-  burger: {
-    width: 34,
-    height: 24,
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  line: {
-    width: 26,
-    height: 3,
-    backgroundColor: colors.textLight,
-    borderRadius: 2,
-  },
-// page layout
+
+  // ---- content area ----
   contentWrapper: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "white", 
   },
   scrollInner: {
     paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingTop: 14,
     paddingBottom: 40,
   },
+
+  // title
   pageTitle: {
-    fontFamily: serif,
-    fontSize: 32,
+    fontFamily: serif,   
+    fontSize: 30,
     textAlign: "center",
-    marginBottom: 25,
+    marginBottom: 42,
+    marginTop: 10,
     color: colors.brand,
-  },
-  section: {
-    marginBottom: 12,
+    letterSpacing: 1.5,
+    fontWeight: "700",
   },
 
-  // Pills
+  section: {
+    marginBottom: 13,
+  },
+
   pill: {
     backgroundColor: colors.brand,
     borderRadius: 999,
@@ -765,6 +693,7 @@ function AccordionPill({
     width: 20,
     textAlign: "right",
   },
+
   content: {
     marginTop: 8,
     borderRadius: 16,
@@ -781,6 +710,7 @@ function AccordionPill({
     marginTop: 8,
     textDecorationLine: "underline",
   },
+
   subButton: {
     marginTop: 12,
     paddingVertical: 8,
@@ -794,6 +724,7 @@ function AccordionPill({
     fontFamily: serif,
     fontSize: 14,
   },
+
   subHeading: {
     fontFamily: serif,
     fontSize: 15,
@@ -802,6 +733,7 @@ function AccordionPill({
     marginBottom: 4,
     color: colors.brand,
   },
+
   priceRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -818,6 +750,7 @@ function AccordionPill({
     fontWeight: "600",
     color: "#123",
   },
+
   qaBlock: {
     marginBottom: 10,
   },
@@ -833,6 +766,7 @@ function AccordionPill({
     lineHeight: 20,
     color: "#123",
   },
+
   bulletRow: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -850,41 +784,21 @@ function AccordionPill({
     lineHeight: 20,
     color: "#123",
   },
-  inlineLink: {
-    textDecorationLine: "underline",
-  },
-  contactRow: {
-    marginBottom: 6,
-  },
-  contactLabel: {
-    fontFamily: serif,
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  contactValue: {
-    fontFamily: serif,
-    fontSize: 14,
-  },
-  link: {
-  fontSize: 16,
-  marginTop: 8,
-  color: "#EA9627",              
-  textDecorationLine: "underline",
-  fontFamily: serif,            
-},
+
   linkText: {
     fontFamily: serif,
     fontSize: 15,
     marginTop: 6,
-    color: "#EA9627", // brand gold
+    color: "#EA9627",
     textDecorationLine: "underline",
   },
+
   socialRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
     marginTop: 16,
-    gap: 14, // if TS complains, replace with marginRight on each button
+    gap: 14,
   },
   socialIconButton: {
     width: 36,
@@ -896,6 +810,6 @@ function AccordionPill({
   },
   socialIcon: {
     fontSize: 18,
-    color: colors.brand, 
+    color: colors.brand,
   },
 });
