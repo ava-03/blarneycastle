@@ -56,7 +56,7 @@ import { Asset } from "expo-asset";
 
 const SHOW_DEV_STATUS = false;
 
-// — Platform-specific serif fallback (keeping your current approach to avoid font issues)
+// — Platform-specific serif fallback
 const serif = Platform.select({
   ios: "Times New Roman",
   android: "serif",
@@ -82,7 +82,7 @@ export default function HomeScreen() {
       const res = await fetchHomeStatus();
       setData(res);
     } catch {
-      // silent fail -> UI falls back to N/A
+      // silent fail - UI falls back to N/A
     }
   };
 
@@ -160,7 +160,7 @@ const bgResizeMode = Platform.OS === "web" ? "contain" : "cover";
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* White top area -> use dark icons/text in status bar */}
+      {/* White top area - dark icons/text in status bar */}
       <StatusBar barStyle="dark-content" />
 
       {/* Top white header */}
