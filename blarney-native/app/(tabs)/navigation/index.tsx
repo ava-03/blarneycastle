@@ -1,3 +1,13 @@
+// https://reactnative.dev/docs/pressable
+// https://reactnative.dev/docs/safeareaview
+// https://reactnative.dev/docs/image#static-image-resources
+// https://reactnative.dev/docs/platform#platformselect
+// https://expo.github.io/router/docs
+// https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
+// https://docs.expo.dev/router/introduction/
+// https://reactnavigation.org/docs/drawer-navigator/
+// Irish Media Agency (Blarney Castle web team)
+
 import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, StyleSheet, Pressable, StatusBar, Platform, Image } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";

@@ -1,6 +1,7 @@
 // https://reactnative.dev/docs/pressable
 // https://reactnative.dev/docs/usewindowdimensions
 // https://reactnative.dev/docs/platform#platformselect
+// https://reactnative.dev/docs/view-style-props#position
 
 import React from "react";
 import {
@@ -52,7 +53,7 @@ export default function SlideMenu({ visible, onClose, onSelect }: Props) {
   ];
 
   return (
-    // Backdrop fills entire screen; tapping it triggers onClose()
+    // Backdrop fills entire screen -  tapping it triggers onClose()
     // stopPropagation prevents closing when tapping inside the panel
     <Pressable style={styles.backdrop} onPress={onClose}>
       <Pressable style={styles.panel} onPress={(e) => e.stopPropagation()}>
