@@ -149,11 +149,11 @@ const s = StyleSheet.create({
   backText: {
     color: colors.textLight,
     fontFamily: serif,
-    fontSize: 32,
+    fontSize: 42,
   },
   logo: {
-    width: Platform.select({ web: 72, default: 70 }),
-    height: Platform.select({ web: 72, default: 74 }),
+    width: Platform.select({ web: 58, default: 55 }),
+    height: Platform.select({ web: 58, default: 60 }),
   },
   titleContainer: {
     flex: 1,
@@ -162,14 +162,14 @@ const s = StyleSheet.create({
   },
   headerTitle: {
     color: colors.textLight,
-    fontSize: Platform.select({ web: 28, default: 25 }),
+    fontSize: Platform.select({ web: 28, default: 22 }),
     fontWeight: "800",
     textAlign: "center",
     fontFamily: serif,
   },
   headerSubtitle: {
     color: colors.textLight,
-    fontSize: Platform.select({ web: 28, default: 25 }),
+    fontSize: Platform.select({ web: 28, default: 22 }),
     fontWeight: "800",
     textAlign: "center",
     fontFamily: serif,

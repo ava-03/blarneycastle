@@ -137,17 +137,17 @@ const s = StyleSheet.create({
     textAlign: "center",
     color: colors.textLight,
     fontFamily: serif,
-    fontSize: 25,
+    fontSize: Platform.select({ web: 26, default: 22 }),
     fontWeight: "800",
   },
   backArrow: {
     color: colors.textLight,
-    fontSize: 28,
-    lineHeight: 28,
+    fontSize: 42,
+    lineHeight: 34,
   },
   logo: {
-    width: Platform.select({ web: 56, default: 64 }),
-    height: Platform.select({ web: 56, default: 64 }),
+    width: Platform.select({ web: 56, default: 55 }),
+    height: Platform.select({ web: 56, default: 60 }),
   },
   contentWrapper: {
     flex: 1,

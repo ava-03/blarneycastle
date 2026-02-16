@@ -40,6 +40,7 @@ import { colors } from "../../../constants/colors";
 import SlideMenu from "../../../components/slidemenu";
 import { router, type Href, Link } from "expo-router";
 import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Linking } from "react-native";
 
 const serif = Platform.select({
   ios: "Times New Roman",
@@ -273,30 +274,26 @@ export default function InfoScreen() {
           </AccordionPill>
 
           {/* Shopping */}
-          <AccordionPill
-            title="SHOPPING"
-            open={openSection === "shopping"}
-            onPress={() => toggleSection("shopping")}
-          >
-            <Text style={s.bodyText}>
-              Bring the charm of Blarney to your home. Explore Irish gifts, meaningful keepsakes
-              and exclusive Blarney Castle souvenirs in our on-site shops or online.
-            </Text>
-            <Link
-              href="https://blarneycastle.ie/shop/"
-              style={[
-                s.bodyText,
-                {
-                  marginTop: 10,
-                  color: "#EA9627",
-                  textDecorationLine: "underline",
-                  fontWeight: "600",
-                },
-              ]}
+            <AccordionPill
+              title="SHOPPING"
+              open={openSection === "shopping"}
+              onPress={() => toggleSection("shopping")}
             >
-              Shop – Blarney Castle
-            </Link>
-          </AccordionPill>
+              <Text style={s.bodyText}>
+                Bring the charm of Blarney to your home. Explore Irish gifts, meaningful keepsakes
+                and exclusive Blarney Castle souvenirs in our on-site shops or online.
+              </Text>
+
+              <Pressable
+                style={s.subButton}
+                onPress={() => Linking.openURL("https://blarneycastle.ie/shop/")}
+                accessibilityLabel="Open the Blarney Castle online shop"
+                accessibilityHint="Opens the shop website in your browser"
+              >
+                <Text style={s.subButtonText}>Open online shop</Text>
+              </Pressable>
+            </AccordionPill>
+
 
           {/* Dining */}
           <AccordionPill
@@ -495,10 +492,15 @@ export default function InfoScreen() {
           >
             <Text style={s.bodyText}>Explore Ireland’s most iconic historical sites.</Text>
 
-            <Pressable onPress={() => router.push("/info/attractionsireland")}>
-              <Text style={s.linkText}>View the full guide →</Text>
+            <Pressable
+              style={s.subButton}
+              onPress={() => router.push("/info/attractionsireland" as Href)}
+              accessibilityLabel="View the full guide to historical attractions in Ireland"
+            >
+              <Text style={s.subButtonText}>View full guide</Text>
             </Pressable>
           </AccordionPill>
+
 
           {/* Say Hello */}
           <AccordionPill
