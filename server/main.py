@@ -2,10 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import select
+
 from db import SessionLocal, POI, SiteStatus
 
 app = FastAPI(title="Blarney API (MySQL)")
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,12 +16,13 @@ app.add_middleware(
         "http://localhost:8082",
         "https://blarneycastle.onrender.com",
     ],
+
+    # https://xkvldos-avabis-8081.exp.direct
     allow_origin_regex=r"^https://.*\.exp\.direct$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 class HomeStatus(BaseModel):
     tickets_url: str
@@ -30,20 +31,13 @@ class HomeStatus(BaseModel):
     closing_time: str
     last_admission: str
 
-
 @app.get("/")
 def home_root():
-    return {
-        "ok": True,
-        "message": "Blarney API running",
-        "endpoints": ["/api/ping", "/api/home", "/api/poi", "/docs"],
-    }
-
+    return {"ok": True, "message": "Blarney API running"}
 
 @app.get("/api/ping")
 def ping():
     return {"ok": True}
-
 
 @app.get("/api/home", response_model=HomeStatus)
 def get_home():
@@ -70,7 +64,6 @@ def get_home():
             closing_time=row.closing_time,
             last_admission=row.last_admission,
         )
-
 
 @app.get("/api/poi")
 def list_poi():
