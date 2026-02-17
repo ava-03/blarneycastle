@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import select
-from db import SessionLocal, POI, SiteStatus
+from server.db import SessionLocal, POI, SiteStatus
 
 app = FastAPI(title="Blarney API (MySQL)")
 
@@ -13,11 +13,16 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost:8081",
         "http://localhost:8082",
+        "https://*.exp.direct",     # Expo tunnel web
+        "https://*.expo.dev",       
+        "https://blarneycastle.onrender.com",  
     ],
+    allow_origin_regex=r"https://.*\.exp\.direct",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 class HomeStatus(BaseModel):
