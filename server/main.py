@@ -6,6 +6,7 @@ from server.db import SessionLocal, POI, SiteStatus
 
 app = FastAPI(title="Blarney API (MySQL)")
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -13,16 +14,13 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost:8081",
         "http://localhost:8082",
-        "https://*.exp.direct",     # Expo tunnel web
-        "https://*.expo.dev",       
-        "https://blarneycastle.onrender.com",  
+        "https://blarneycastle.onrender.com",
     ],
-    allow_origin_regex=r"https://.*\.exp\.direct",
+    allow_origin_regex=r"^https://.*\.exp\.direct$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 
 class HomeStatus(BaseModel):
@@ -51,9 +49,7 @@ def ping():
 def get_home():
     with SessionLocal() as db:
         row = (
-            db.execute(
-                select(SiteStatus).order_by(SiteStatus.id.desc()).limit(1)
-            )
+            db.execute(select(SiteStatus).order_by(SiteStatus.id.desc()).limit(1))
             .scalars()
             .first()
         )
@@ -80,7 +76,4 @@ def get_home():
 def list_poi():
     with SessionLocal() as db:
         rows = db.execute(select(POI)).scalars().all()
-        return [
-            dict(id=r.id, name=r.name, lat=r.lat, lng=r.lng)
-            for r in rows
-        ]
+        return [dict(id=r.id, name=r.name, lat=r.lat, lng=r.lng) for r in rows]
