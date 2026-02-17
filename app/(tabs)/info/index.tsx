@@ -1,0 +1,817 @@
+// https://blarneycastle.retailint-tickets.com/Home
+// https://reactnative.dev/docs/pressable
+// https://reactnative.dev/docs/scrollview
+// https://reactnative.dev/docs/safeareaview
+// https://reactnative.dev/docs/image - image and cards
+// https://reactnative.dev/docs/safeareaview
+// https://reactnative.dev/docs/stylesheet
+// https://reactnative.dev/docs/platform - for iOS/web font handling & sizing
+// https://reactnative.dev/docs/linking - call, email and web
+// https://docs.expo.dev/router/basics/navigation/
+// https://expo.github.io/router/docs
+// https://reactnative.dev/docs/accessibility#accessibility-hints-and-label
+// https://docs.expo.dev/router/introduction/
+// https://reactnavigation.org/docs/drawer-navigator/
+// https://icons.expo.fyi/Index - social icons
+// https://reactnative.dev/docs/pressable#onpress
+// https://react.dev/learn/conditional-rendering - used for “open ? content : null
+// https://react.dev/reference/react/useState
+// https://reactnative.dev/docs/shadow-props
+// https://reactnative.dev/docs/platform-specific-code
+// https://www.youtube.com/watch?v=u6MDeHJOjGI
+// https://www.youtube.com/watch?v=czhLCGuu_AU
+// https://www.youtube.com/watch?v=Ts3kTbdQ_4U
+// https://www.youtube.com/watch?v=IuJiyKsJ14A 
+// https://www.youtube.com/watch?v=22uJhH1S8fU
+
+import React, { useState } from "react";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  StatusBar,
+  Platform,
+  Image,
+  ScrollView,
+} from "react-native";
+import { colors } from "../../../constants/colors";
+import SlideMenu from "../../../components/slidemenu";
+import { router, type Href, Link } from "expo-router";
+import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Linking } from "react-native";
+
+const serif = Platform.select({
+  ios: "Times New Roman",
+  android: "serif",
+  web: "Times New Roman, serif",
+});
+
+
+const infoTitleFont = Platform.select({
+  ios: "System",
+  android: "sans-serif-medium",
+  web: "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
+});
+
+type SectionId =
+  | "tickets"
+  | "opening"
+  | "faqs"
+  | "shopping"
+  | "dining"
+  | "about"
+  | "parking"
+  | "directions"
+  | "safety"
+  | "cork"
+  | "history"
+  | "hello";
+
+export default function InfoScreen() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openSection, setOpenSection] = useState<SectionId | null>(null);
+
+  const toggleSection = (id: SectionId) => {
+    setOpenSection((prev) => (prev === id ? null : id));
+  };
+
+  return (
+    <SafeAreaView style={s.container}>
+      <StatusBar barStyle="dark-content" />
+
+      {/* Top white header  */}
+      <View style={s.topBar}>
+        <Pressable
+          accessibilityLabel="Open menu"
+          onPress={() => setMenuOpen(true)}
+          style={s.menuButton}
+        >
+          <Ionicons name="menu" size={36} color={colors.brand} />
+        </Pressable>
+
+        <View pointerEvents="none" style={s.logoWrap}>
+          <Image
+            source={require("../../../assets/images/logo-white.png")}
+            style={s.officialLogo}
+            resizeMode="contain"
+            accessibilityLabel="Blarney Castle and Gardens logo"
+          />
+        </View>
+
+        <View style={s.rightSpacer} />
+      </View>
+
+      {/* Main content */}
+      <View style={s.contentWrapper}>
+        <ScrollView
+          contentContainerStyle={s.scrollInner}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={s.pageTitle}>INFORMATION</Text>
+
+          {/* Tickets & Prices */}
+          <AccordionPill
+            title="TICKETS & PRICES"
+            open={openSection === "tickets"}
+            onPress={() => toggleSection("tickets")}
+          >
+            <Text style={s.bodyText}>
+              Buy tickets in advance online or at our ticket office on arrival.
+            </Text>
+
+            <View style={{ marginTop: 12 }}>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>Adult Admission</Text>
+                <Text style={s.priceValue}>€24</Text>
+              </View>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>Student / Seniors (65+)</Text>
+                <Text style={s.priceValue}>€19</Text>
+              </View>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>
+                  Children 6–16 (5 & under free, with adult)
+                </Text>
+                <Text style={s.priceValue}>€12</Text>
+              </View>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>Family (2 adults + 2 children)</Text>
+                <Text style={s.priceValue}>€65</Text>
+              </View>
+            </View>
+
+            <Text style={[s.bodyText, { marginTop: 10, fontSize: 14 }]}>
+              Children under 16 must be accompanied by an adult.{"\n"}
+              Valid student I.D. is required.
+            </Text>
+
+            <Link
+              href="https://blarneycastle.retailint-tickets.com/Event/GENERALADM"
+              style={[
+                s.bodyText,
+                {
+                  marginTop: 12,
+                  color: "#EA9627",
+                  textDecorationLine: "underline",
+                  fontWeight: "600",
+                },
+              ]}
+            >
+              Book Tickets
+            </Link>
+          </AccordionPill>
+
+          {/* Opening Times */}
+          <AccordionPill
+            title="OPENING TIMES"
+            open={openSection === "opening"}
+            onPress={() => toggleSection("opening")}
+          >
+            <Text style={s.bodyText}>
+              Opening hours and last admission times vary slightly throughout the year.
+            </Text>
+
+            <View style={{ marginTop: 12 }}>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>Jan / Feb / Mar</Text>
+                <Text style={s.priceValue}>9.00am – 5.00pm (Last entry 4.00pm)</Text>
+              </View>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>Apr</Text>
+                <Text style={s.priceValue}>9.00am – 5.30pm (Last entry 4.30pm)</Text>
+              </View>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>May – Sep</Text>
+                <Text style={s.priceValue}>9.00am – 6.00pm (Last entry 5.00pm)</Text>
+              </View>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>Oct</Text>
+                <Text style={s.priceValue}>9.00am – 5.30pm (Last entry 4.30pm)</Text>
+              </View>
+              <View style={s.priceRow}>
+                <Text style={s.priceLabel}>Nov / Dec</Text>
+                <Text style={s.priceValue}>9.00am – 5.00pm (Last entry 4.00pm)</Text>
+              </View>
+            </View>
+
+            <Text style={[s.bodyText, { marginTop: 20, fontSize: 17 }]}>
+              24 & 25 December: Closed
+            </Text>
+            <Text style={[s.bodyText, { fontSize: 17 }]}>
+              26 December & 1 January: 10.00am – 5.00pm (Last entry 4.00pm)
+            </Text>
+          </AccordionPill>
+
+          {/* FAQ’s */}
+          <AccordionPill
+            title="FAQ'S"
+            open={openSection === "faqs"}
+            onPress={() => toggleSection("faqs")}
+          >
+            <View>
+              {[
+                [
+                  "Do you have to buy tickets online?",
+                  "No, tickets can be bought online or on arrival at our ticket office.",
+                ],
+                [
+                  "Do you have timed slots?",
+                  "No, we do not have timed slots. You can visit any time during our opening hours.",
+                ],
+                ["Do you accept credit cards?", "Yes, we accept Visa and Mastercard."],
+                [
+                  "How long does a visit take?",
+                  "To explore the Castle and 100 acres of gardens, we recommend at least 3 hours.",
+                ],
+                [
+                  "Do you have guide maps available?",
+                  "Maps are available in English, French, German, Spanish, Italian and Chinese. Please ask our staff if you require a map other than English.",
+                ],
+                [
+                  "Do you have a café on site?",
+                  "Yes, we have a café (no. 8 on the map) and a coffee hut just inside the entrance.",
+                ],
+                [
+                  "Are the Castle & Gardens wheelchair accessible?",
+                  "The Castle is not accessible but a portion of the grounds and gardens are. If you have a disability, please alert our staff as there is no charge for entry.",
+                ],
+                [
+                  "Is a student/college I.D. required?",
+                  "Yes, a valid student ID is required to purchase a student ticket.",
+                ],
+                ["What age qualifies for a child ticket?", "Anyone aged 6–16."],
+                [
+                  "Can children kiss the Stone?",
+                  "Yes, but children under the age of 8 are at the discretion of the staff member.",
+                ],
+                [
+                  "Are dogs allowed?",
+                  "No. Dogs are not allowed in the Castle & Gardens except for guide dogs/assistance dogs.",
+                ],
+                [
+                  "Are bicycles allowed?",
+                  "No, bicycles, scooters, roller blades or ball games are not allowed within the park.",
+                ],
+                ["Can you fly drones?", "No. As a private estate, drones are not permitted."],
+                ["Are tickets refundable?", "Tickets are non-refundable, but we can offer a change of date."],
+                [
+                  "Do you have a car park on site?",
+                  "Yes. Parking is a €2 flat fee for the duration of your visit. The car park closes at our designated closing time; vehicles released after this incur a €50 penalty. No overnight parking.",
+                ],
+                [
+                  "Which bus do I take back to Cork?",
+                  "The 215 bus leaves from outside the church just off Blarney Square. Please check the latest timetables on the Bus Éireann website.",
+                ],
+              ].map(([q, a]) => (
+                <View key={q} style={s.qaBlock}>
+                  <Text style={s.question}>Q. {q}</Text>
+                  <Text style={s.answer}>A. {a}</Text>
+                </View>
+              ))}
+            </View>
+          </AccordionPill>
+
+          {/* Shopping */}
+            <AccordionPill
+              title="SHOPPING"
+              open={openSection === "shopping"}
+              onPress={() => toggleSection("shopping")}
+            >
+              <Text style={s.bodyText}>
+                Bring the charm of Blarney to your home. Explore Irish gifts, meaningful keepsakes
+                and exclusive Blarney Castle souvenirs in our on-site shops or online.
+              </Text>
+
+              <Pressable
+                style={s.subButton}
+                onPress={() => Linking.openURL("https://blarneycastle.ie/shop/")}
+                accessibilityLabel="Open the Blarney Castle online shop"
+                accessibilityHint="Opens the shop website in your browser"
+              >
+                <Text style={s.subButtonText}>Open online shop</Text>
+              </Pressable>
+            </AccordionPill>
+
+
+          {/* Dining */}
+          <AccordionPill
+            title="DINING"
+            open={openSection === "dining"}
+            onPress={() => toggleSection("dining")}
+          >
+            <Text style={s.bodyText}>
+              Enjoy a bite to eat at the Stable Yard Café, located at no.8 on the map,
+              or grab a quick drink and snack from our coffee hut just inside the entrance.
+            </Text>
+          </AccordionPill>
+
+          {/* ABOUT */}
+          <AccordionPill
+            title="ABOUT"
+            open={openSection === "about"}
+            onPress={() => toggleSection("about")}
+          >
+            <Text style={s.bodyText}>
+              Learn more about the history and stories behind Blarney Castle,
+              the Blarney Stone and Blarney House.
+            </Text>
+
+            <Link href="/info/castle" asChild>
+              <Pressable style={s.subButton}>
+                <Text style={s.subButtonText}>Blarney Castle</Text>
+              </Pressable>
+            </Link>
+
+            <Link href="/info/stone" asChild>
+              <Pressable style={s.subButton}>
+                <Text style={s.subButtonText}>Blarney Stone</Text>
+              </Pressable>
+            </Link>
+
+            <Link href="/info/house" asChild>
+              <Pressable style={s.subButton}>
+                <Text style={s.subButtonText}>Blarney House</Text>
+              </Pressable>
+            </Link>
+          </AccordionPill>
+
+          {/* Parking */}
+          <AccordionPill
+            title="PARKING"
+            open={openSection === "parking"}
+            onPress={() => toggleSection("parking")}
+          >
+            <Text style={s.bodyText}>
+              Our main car park is located just beyond the entrance barrier, with disabled
+              spaces available.
+            </Text>
+            <Text style={[s.bodyText, { marginTop: 8 }]}>
+              Parking is a simple €2 flat fee for the duration of your visit.
+            </Text>
+            <Text style={[s.bodyText, { marginTop: 8 }]}>
+              Please note that the car park closes at our designated closing time.
+              Vehicles released after this will incur a €50 penalty. Overnight parking is
+              not permitted.
+            </Text>
+          </AccordionPill>
+
+          {/* Directions & Travel Information */}
+          <AccordionPill
+            title="DIRECTIONS & TRAVEL INFORMATION"
+            open={openSection === "directions"}
+            onPress={() => toggleSection("directions")}
+          >
+            <Text style={s.bodyText}>
+              Blarney Castle is situated in Blarney Village, 8 km northwest of Cork city
+              in the south of Ireland.
+            </Text>
+
+            <Text style={s.subHeading}>From Cork Airport</Text>
+            <View>
+              {[
+                "From the airport follow signs for Cork City Centre.",
+                "From the city centre follow signs for Limerick (N20).",
+                "Travel for approximately 7 km and exit left, signposted Blarney.",
+                "Arrive in Blarney Village.",
+              ].map((t) => (
+                <View key={t} style={s.bulletRow}>
+                  <Text style={s.bulletDot}>•</Text>
+                  <Text style={s.bulletText}>{t}</Text>
+                </View>
+              ))}
+            </View>
+
+            <Text style={s.subHeading}>From Shannon</Text>
+            <View>
+              <View style={s.bulletRow}>
+                <Text style={s.bulletDot}>•</Text>
+                <Text style={s.bulletText}>
+                  By car: follow the road to Limerick, then signs for Mallow and take the
+                  turn-off for Blarney before Cork City.
+                </Text>
+              </View>
+              <View style={s.bulletRow}>
+                <Text style={s.bulletDot}>•</Text>
+                <Text style={s.bulletText}>
+                  By bus: there is a direct bus from Shannon Airport to Cork City (see
+                  Bus Éireann for up-to-date timetables).
+                </Text>
+              </View>
+            </View>
+
+            <Text style={s.subHeading}>From Dublin</Text>
+            <View>
+              <View style={s.bulletRow}>
+                <Text style={s.bulletDot}>•</Text>
+                <Text style={s.bulletText}>
+                  By car: it takes around 3–4 hours. Take the N8 motorway south towards
+                  Cork, then follow signs for Blarney.
+                </Text>
+              </View>
+              <View style={s.bulletRow}>
+                <Text style={s.bulletDot}>•</Text>
+                <Text style={s.bulletText}>
+                  By train: regular services run from Dublin to Cork (see Irish Rail for
+                  timetables), then connect to Blarney by bus or taxi.
+                </Text>
+              </View>
+              <View style={s.bulletRow}>
+                <Text style={s.bulletDot}>•</Text>
+                <Text style={s.bulletText}>
+                  Aircoach also runs buses from Dublin Airport to Cork; journey times vary
+                  depending on traffic.
+                </Text>
+              </View>
+            </View>
+          </AccordionPill>
+
+          {/* Safety */}
+          <AccordionPill
+            title="SAFETY"
+            open={openSection === "safety"}
+            onPress={() => toggleSection("safety")}
+          >
+            <Text style={s.bodyText}>
+              Your safety is our priority. Please take care when exploring the grounds and castle,
+              particularly on stone steps and uneven surfaces. Wear appropriate footwear
+              and supervise children at all times.
+            </Text>
+
+            <Text style={[s.bodyText, { marginTop: 12, fontWeight: "bold" }]}>
+              First Aid & Assistance
+            </Text>
+
+            <Text style={s.bodyText}>
+              Our trained First Aid team is available during opening hours. For any
+              assistance, please contact the castle office at{" "}
+              <Link href="tel:+353214385252" style={[s.bodyLink]}>
+                00 353 21 438 5252
+              </Link>
+              .
+            </Text>
+
+            <Text style={[s.bodyText, { marginTop: 12, fontWeight: "bold" }]}>
+              Emergency Services
+            </Text>
+
+            <Text style={s.bodyText}>
+              In case of emergency, dial 999 or 112 to reach:
+              {"\n"}• Ambulance Service
+              {"\n"}• Gardaí (Police)
+              {"\n"}• Fire Service
+            </Text>
+          </AccordionPill>
+
+          {/* Experiences in Cork */}
+          <AccordionPill
+            title="EXPERIENCES IN CORK"
+            open={openSection === "cork"}
+            onPress={() => toggleSection("cork")}
+          >
+            <Text style={s.bodyText}>
+              Explore 10 unforgettable experiences across Cork - from whale watching on
+              the coast to historic sites and city favourites.
+            </Text>
+
+            <Pressable
+              style={s.subButton}
+              onPress={() => router.push("/info/expcork" as Href)}
+              accessibilityLabel="View 10 not-to-miss experiences in Cork"
+            >
+              <Text style={s.subButtonText}>View experiences</Text>
+            </Pressable>
+          </AccordionPill>
+
+          {/* Historical Attractions in Ireland */}
+          <AccordionPill
+            title="HISTORICAL ATTRACTIONS IN IRELAND"
+            open={openSection === "history"}
+            onPress={() => toggleSection("history")}
+          >
+            <Text style={s.bodyText}>Explore Ireland’s most iconic historical sites.</Text>
+
+            <Pressable
+              style={s.subButton}
+              onPress={() => router.push("/info/attractionsireland" as Href)}
+              accessibilityLabel="View the full guide to historical attractions in Ireland"
+            >
+              <Text style={s.subButtonText}>View full guide</Text>
+            </Pressable>
+          </AccordionPill>
+
+
+          {/* Say Hello */}
+          <AccordionPill
+            title="SAY HELLO!"
+            open={openSection === "hello"}
+            onPress={() => toggleSection("hello")}
+          >
+            <Link href="tel:+353214385252" style={s.linkText}>
+              Phone – 00 353 21 438 5252
+            </Link>
+
+            <Link href="mailto:info@blarneycastle.ie" style={s.linkText}>
+              Email – info@blarneycastle.ie
+            </Link>
+
+            <View style={s.socialRow}>
+              <Link href="https://www.facebook.com/blarneycastleireland" asChild>
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome name="facebook-f" style={s.socialIcon} />
+                </Pressable>
+              </Link>
+
+              <Link href="https://x.com/blarney_castle" asChild>
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome name="twitter" style={s.socialIcon} />
+                </Pressable>
+              </Link>
+
+              <Link href="https://www.youtube.com/@theblarneycastle" asChild>
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome name="youtube-play" style={s.socialIcon} />
+                </Pressable>
+              </Link>
+
+              <Link href="https://www.instagram.com/blarneycastleandgardens/" asChild>
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome name="instagram" style={s.socialIcon} />
+                </Pressable>
+              </Link>
+
+              <Link
+                href="https://www.tripadvisor.co.uk/Attraction_Review-g186599-d214817-Reviews-Blarney_Castle_Gardens-Blarney_Cork_County_Cork.html"
+                asChild
+              >
+                <Pressable style={s.socialIconButton}>
+                  <FontAwesome5 name="tripadvisor" style={s.socialIcon} />
+                </Pressable>
+              </Link>
+            </View>
+          </AccordionPill>
+        </ScrollView>
+      </View>
+
+      <SlideMenu
+        visible={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onSelect={(label: string) => {
+          const path: Record<string, Href> = {
+            HOME: "/" as Href,
+            NAVIGATION: "/navigation" as Href,
+            INFO: "/info" as Href,
+            NATURE: "/nature" as Href,
+            "AUDIO TOUR": "/audio" as Href,
+            PHOTOS: "/photos" as Href,
+          };
+
+          if (label === "INFO") {
+            router.replace("/info");
+          } else {
+            router.push(path[label] ?? ("/" as Href));
+          }
+          setMenuOpen(false);
+        }}
+      />
+    </SafeAreaView>
+  );
+}
+
+function AccordionPill({
+  title,
+  open,
+  onPress,
+  children,
+}: {
+  title: string;
+  open: boolean;
+  onPress: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <View style={s.section}>
+      <Pressable style={s.pill} onPress={onPress}>
+        <Text style={s.pillText}>{title}</Text>
+        <Text style={s.pillIcon}>{open ? "▲" : "▼"}</Text>
+      </Pressable>
+      {open && <View style={s.content}>{children}</View>}
+    </View>
+  );
+}
+
+const s = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+
+  // ---- Header styles  ----
+  topBar: {
+    backgroundColor: "white",
+    height: 110,
+    justifyContent: "center",
+    position: "relative",
+  },
+  menuButton: {
+    position: "absolute",
+    left: 10,
+    top: 20,
+    width: 70,
+    height: 70,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 15,
+    zIndex: 10,
+  },
+  officialLogo: {
+    position: "absolute",
+    alignSelf: "center",
+    top: 3,
+    height: 110,
+    width: 410,
+  },
+  logoWrap: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  rightSpacer: {
+    width: 44,
+    height: 44,
+  },
+
+  // ---- content area ----
+  contentWrapper: {
+    flex: 1,
+    backgroundColor: "white", 
+  },
+  scrollInner: {
+    paddingHorizontal: 24,
+    paddingTop: 14,
+    paddingBottom: 40,
+  },
+
+  // title
+  pageTitle: {
+    fontFamily: serif,   
+    fontSize: 30,
+    textAlign: "center",
+    marginBottom: 42,
+    marginTop: 10,
+    color: colors.brand,
+    letterSpacing: 1.5,
+    fontWeight: "700",
+  },
+
+  section: {
+    marginBottom: 13,
+  },
+
+  pill: {
+    backgroundColor: colors.brand,
+    borderRadius: 999,
+    paddingVertical: 25,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pillText: {
+    color: colors.textLight,
+    fontFamily: serif,
+    fontSize: 22,
+    flex: 1,
+    textAlign: "center",
+  },
+  pillIcon: {
+    color: colors.textLight,
+    fontSize: 16,
+    width: 20,
+    textAlign: "right",
+  },
+
+  content: {
+    marginTop: 8,
+    borderRadius: 16,
+    padding: 16,
+    backgroundColor: "#e5f2ef",
+  },
+  bodyText: {
+    fontFamily: serif,
+    fontSize: 18,
+    lineHeight: 20,
+    color: "#123",
+  },
+  bodyLink: {
+    marginTop: 8,
+    textDecorationLine: "underline",
+  },
+
+  subButton: {
+    marginTop: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    backgroundColor: colors.brand,
+    alignSelf: "flex-start",
+  },
+  subButtonText: {
+    color: colors.textLight,
+    fontFamily: serif,
+    fontSize: 14,
+  },
+
+  subHeading: {
+    fontFamily: serif,
+    fontSize: 15,
+    fontWeight: "600",
+    marginTop: 8,
+    marginBottom: 4,
+    color: colors.brand,
+  },
+
+  priceRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  priceLabel: {
+    fontFamily: serif,
+    fontSize: 14,
+    color: "#123",
+  },
+  priceValue: {
+    fontFamily: serif,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#123",
+  },
+
+  qaBlock: {
+    marginBottom: 10,
+  },
+  question: {
+    fontFamily: serif,
+    fontWeight: "600",
+    fontSize: 14,
+    marginBottom: 2,
+  },
+  answer: {
+    fontFamily: serif,
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#123",
+  },
+
+  bulletRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 4,
+  },
+  bulletDot: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginRight: 6,
+  },
+  bulletText: {
+    flex: 1,
+    fontFamily: serif,
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#123",
+  },
+
+  linkText: {
+    fontFamily: serif,
+    fontSize: 15,
+    marginTop: 6,
+    color: "#EA9627",
+    textDecorationLine: "underline",
+  },
+
+  socialRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginTop: 16,
+    gap: 14,
+  },
+  socialIconButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#f0f0f0",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  socialIcon: {
+    fontSize: 18,
+    color: colors.brand,
+  },
+});
