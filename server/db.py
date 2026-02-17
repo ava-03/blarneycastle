@@ -1,28 +1,28 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import declarative_base, sessionmaker
-from dotenv import load_dotenv
+from urllib.parse import quote_plus
 
-load_dotenv()
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker, declarative_base
+
 
 DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
+DB_PASS = os.getenv("DB_PASS") or ""
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME")
 
+# Encode password for URL safety
+DB_PASS_ENCODED = quote_plus(DB_PASS)
+
 SSL_CA_PATH = os.path.join(os.path.dirname(__file__), "aiven-ca.pem")
 
-DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASS_ENCODED}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 engine = create_engine(
     DATABASE_URL,
-    future=True,
+    connect_args={"ssl_ca": SSL_CA_PATH},
     pool_pre_ping=True,
-    connect_args={
-        "ssl_ca": SSL_CA_PATH,
-        "ssl_verify_cert": True,
-    },
+    future=True,
 )
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
