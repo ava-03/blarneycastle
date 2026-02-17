@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+
+# Secrets
+.env
+server/.env
+
+
+# Database dumps
+*.sql
+
+
+# Node / Expo
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+
+# OS junk
+.DS_Store
+Thumbs.db
