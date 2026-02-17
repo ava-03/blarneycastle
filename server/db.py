@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 
 DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS") or ""
+DB_PASS = os.getenv("DB_PASS") or os.getenv("DB_PASSWORD") or ""
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME")
