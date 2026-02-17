@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 from db import SessionLocal, POI, SiteStatus
 
@@ -12,17 +12,19 @@ app.add_middleware(
     allow_origins=[
         "http://127.0.0.1:5173",
         "http://localhost:5173",
+        "http://127.0.0.1:8081",
         "http://localhost:8081",
+        "http://127.0.0.1:8082",
         "http://localhost:8082",
         "https://blarneycastle.onrender.com",
     ],
 
-    # https://xkvldos-avabis-8081.exp.direct
     allow_origin_regex=r"^https://.*\.exp\.direct$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 class HomeStatus(BaseModel):
     tickets_url: str
@@ -31,13 +33,35 @@ class HomeStatus(BaseModel):
     closing_time: str
     last_admission: str
 
+
 @app.get("/")
 def home_root():
-    return {"ok": True, "message": "Blarney API running"}
+    return {
+        "ok": True,
+        "message": "Blarney API running",
+        "endpoints": ["/health", "/health/db", "/api/ping", "/api/home", "/api/poi", "/docs"],
+    }
+
+
+@app.get("/health")
+def health():
+    return {"ok": True}
+
+
+@app.get("/health/db")
+def health_db():
+    try:
+        with SessionLocal() as db:
+            db.execute(text("SELECT 1"))
+        return {"ok": True, "db": "up"}
+    except Exception as e:
+        return {"ok": False, "db": "down", "error": str(e)}
+
 
 @app.get("/api/ping")
 def ping():
     return {"ok": True}
+
 
 @app.get("/api/home", response_model=HomeStatus)
 def get_home():
@@ -64,6 +88,7 @@ def get_home():
             closing_time=row.closing_time,
             last_admission=row.last_admission,
         )
+
 
 @app.get("/api/poi")
 def list_poi():
