@@ -1,0 +1,16 @@
+# Ignore everything
+*
+
+# Include the mobile app folder fully
+!blarney-native/
+!blarney-native/**
+
+# But exclude its node_modules
+blarney-native/node_modules/
+blarney-native/**/node_modules/
+
+# Also exclude Expo cache
+blarney-native/.expo/
+blarney-native/.expo-shared/
+
+

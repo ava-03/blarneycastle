@@ -1,0 +1,10 @@
+{
+  "cli": {
+    "version": ">= 18.0.1"
+  },
+  "build": {
+    "production": {
+      "projectRoot": "blarney-native"
+    }
+  }
+}
