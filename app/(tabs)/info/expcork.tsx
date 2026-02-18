@@ -116,7 +116,7 @@ const experiences = [
       "Nano Nagel Place invites visitors to learn about Nano’s extraordinary life at their state of the heritage centre. You can also soak up the peaceful beauty of the convent’s hidden gardens and graveyard, and enjoy a delicious (and sustainable) meal at the garden terrace cafe, Good Day Deli.",
       "Photo Credit: Nano Nagle Place",
     ],
-    image: require("../../../assets/images/nano_nagle.png"),
+    image: require("../../../assets/images/nano_nagle.jpg"),
   },
   {
     title: "Marvel at Mizen Head",

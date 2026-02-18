@@ -47,7 +47,7 @@ import {
   ImageBackground,
 } from "react-native";
 
-import { fetchHomeStatus, ping, HomeStatus } from "../../lib/api";
+import { fetchHomeStatus, pingServer, HomeStatus } from "../../lib/api";
 import { colors } from "../../constants/colors";
 import SlideMenu from "../../components/slidemenu";
 import { router, type Href } from "expo-router";
@@ -76,17 +76,18 @@ export default function HomeScreen() {
     if (ok) await Linking.openURL(url);
   };
 
-  const load = async () => {
+    const load = async () => {
     try {
-      await ping();
+      await pingServer();
       const res = await fetchHomeStatus();
       setData(res);
-    } catch {
-      // silent fail - UI falls back to N/A
+    } catch (err) {
+      console.log("LOAD FAILED:", err);
     }
   };
 
-const bgModule = require("../../assets/images/castle_background.png");
+
+const bgModule = require("../../assets/images/castle_background.jpg");
 const bgUri = Asset.fromModule(bgModule).uri;
 
 
@@ -145,8 +146,6 @@ const bgUri = Asset.fromModule(bgModule).uri;
       {value ? <Text style={styles.pillValue}>{value}</Text> : null}
     </Pressable>
   );
-
-const bgResizeMode = Platform.OS === "web" ? "contain" : "cover";
 
 
   if (loading) {

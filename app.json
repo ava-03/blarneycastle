@@ -4,13 +4,15 @@
     "slug": "BlarneyCastleandGardens",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/app-icon.png",
     "scheme": "blarneynative",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "icon": "./assets/images/app-icon.png",
       "infoPlist": {
+        "CFBundleDisplayName": "Blarney Castle",
         "NSLocationWhenInUseUsageDescription": "We use your location to show where you are on the Blarney Castle map.",
         "ITSAppUsesNonExemptEncryption": false
       },
