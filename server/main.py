@@ -38,7 +38,7 @@ JWT_SECRET = os.getenv("JWT_SECRET", "")
 JWT_ALG = "HS256"
 JWT_EXPIRES_DAYS = int(os.getenv("JWT_EXPIRES_DAYS", "90"))
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 bearer_scheme = HTTPBearer(auto_error=False)
 
 
