@@ -41,6 +41,7 @@ JWT_EXPIRES_DAYS = int(os.getenv("JWT_EXPIRES_DAYS", "90"))
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 bearer_scheme = HTTPBearer(auto_error=False)
 
+
 def hash_password(plain_password: str) -> str:
     return pwd_context.hash(plain_password)
 
@@ -224,6 +225,9 @@ def admin_change_password(payload: ChangePasswordRequest, user=Depends(get_curre
     if len(payload.new_password) < 10:
         raise HTTPException(status_code=400, detail="Password must be at least 10 characters")
 
+    if len(payload.new_password.encode("utf-8")) > 72:
+        raise HTTPException(status_code=400, detail="Password too long (max 72 bytes)")
+
     with SessionLocal() as db:
         db_user = (
             db.execute(select(StaffUser).where(StaffUser.id == user.id).limit(1))
@@ -247,6 +251,9 @@ def bootstrap_staff_user(key: str, username: str = "castlestaff", password: str 
     bootstrap_key = os.getenv("BOOTSTRAP_KEY", "")
     if not bootstrap_key or key != bootstrap_key:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+    if len(password.encode("utf-8")) > 72:
+        raise HTTPException(status_code=400, detail="Password too long (max 72 bytes)")
 
     with SessionLocal() as db:
         existing = (
