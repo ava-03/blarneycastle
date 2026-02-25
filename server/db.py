@@ -1,7 +1,7 @@
 import os
 from urllib.parse import quote_plus
-
-from sqlalchemy import create_engine, Column, Integer, String
+from datetime import datetime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 
@@ -45,3 +45,11 @@ class SiteStatus(Base):
     car_park_status = Column(String(100), nullable=False)
     closing_time = Column(String(20), nullable=False)
     last_admission = Column(String(20), nullable=False)
+
+
+class StaffUser(Base):
+    __tablename__ = "staff_users"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(120), unique=True, nullable=False, index=True)
+    password_hash = Column(String(255), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
