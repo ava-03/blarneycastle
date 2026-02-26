@@ -22,11 +22,10 @@ Base.metadata.create_all(bind=engine)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://blarneycastle.onrender.com",
         "https://admin.staff-bc.com",
         "https://blarneycastle.vercel.app",
     ],
-    allow_origin_regex=r"^(http://localhost:\d+|http://127\.0\.0\.1:\d+|https://.*\.exp\.direct|https://.*\.expo\.dev)$",
+    allow_origin_regex=r"^(http://localhost:\d+|http://127\.0\.0\.1:\d+|https://.*\.exp\.direct|https://.*\.expo\.dev|https://.*\.vercel\.app)$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
