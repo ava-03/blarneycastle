@@ -242,29 +242,3 @@ def admin_change_password(payload: ChangePasswordRequest, user=Depends(get_curre
         db.commit()
 
     return {"ok": True}
-
-# ----------------------------
-# TEMPORARY: bootstrap staff user (create once, then DELETE)
-# ----------------------------
-@app.post("/admin/bootstrap")
-def bootstrap_staff_user(key: str, username: str = "castlestaff", password: str = "CHANGE_ME_NOW"):
-    bootstrap_key = os.getenv("BOOTSTRAP_KEY", "")
-    if not bootstrap_key or key != bootstrap_key:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    if len(password.encode("utf-8")) > 72:
-        raise HTTPException(status_code=400, detail="Password too long (max 72 bytes)")
-
-    with SessionLocal() as db:
-        existing = (
-            db.execute(select(StaffUser).where(StaffUser.username == username).limit(1))
-            .scalars()
-            .first()
-        )
-        if existing:
-            return {"ok": True, "message": "User already exists"}
-
-        user = StaffUser(username=username, password_hash=hash_password(password))
-        db.add(user)
-        db.commit()
-        return {"ok": True, "message": "User created"}
