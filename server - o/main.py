@@ -24,6 +24,7 @@ app.add_middleware(
     allow_origins=[
         "https://blarneycastle.onrender.com",
         "https://admin.staff-bc.com",
+        "https://blarneycastle.vercel.app",
     ],
     allow_origin_regex=r"^(http://localhost:\d+|http://127\.0\.0\.1:\d+|https://.*\.exp\.direct|https://.*\.expo\.dev)$",
     allow_credentials=True,
@@ -50,7 +51,6 @@ def verify_password(plain_password: str, password_hash: str) -> bool:
 
 def create_access_token(username: str) -> str:
     if not JWT_SECRET:
-        # In production, set JWT_SECRET in Render env vars
         raise HTTPException(status_code=500, detail="JWT_SECRET is not configured")
     expire = datetime.utcnow() + timedelta(days=JWT_EXPIRES_DAYS)
     payload = {"sub": username, "exp": expire}
@@ -186,7 +186,7 @@ def login(req: LoginRequest):
 
 @app.get("/admin/status", response_model=HomeStatus)
 def admin_get_status(_user=Depends(get_current_staff_user)):
-    # Reuse the public logic, but protected
+    # public logic, but protected
     return get_home()
 
 @app.post("/admin/status", response_model=HomeStatus)
