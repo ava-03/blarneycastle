@@ -1,33 +1,47 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.sqlite3
+# https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# Virtual environments
-.venv/
-venv/
-env/
-
-
-# Secrets
-.env
-server/.env
-
-
-# Database dumps
-*.sql
-
-
-# Node / Expo
+# dependencies
 node_modules/
+
+# Expo
 .expo/
-.expo-shared/
 dist/
 web-build/
+expo-env.d.ts
+.vscode/
 
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+.env
+*.pem
+*.key
 
-# OS junk
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
 .DS_Store
-Thumbs.db
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+app-example
+
+# generated native folders
+/ios
+/android

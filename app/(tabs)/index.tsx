@@ -198,7 +198,7 @@ const bgResizeMode = Platform.OS === "web" ? "contain" : "cover";
       <View
       style={[
         styles.webBg,
-        { backgroundImage: `url("${bgUri}")` } as any,
+        ({ backgroundImage: `url("${bgUri}")` } as any),
       ]}
     >
     <View style={styles.bgTint}>
@@ -259,7 +259,7 @@ const bgResizeMode = Platform.OS === "web" ? "contain" : "cover";
     <ImageBackground
       source={bgModule}
       style={styles.bg}
-      resizeMode="cover"
+      resizeMode="contain"
     >
       <View style={styles.bgTint}>
         <ScrollView
@@ -513,7 +513,9 @@ const styles = StyleSheet.create({
 
 webBg: {
   flex: 1,
-  backgroundSize: "cover",
+  backgroundSize: "contain",
+  backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
+  backgroundColor: "#000",
 },
 });
