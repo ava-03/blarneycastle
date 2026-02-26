@@ -7,22 +7,17 @@
 import axios from "axios";
 import { Platform } from "react-native";
 
-// Local FastAPI for expo web
-// run directly on  http://127.0.0.1
-const WEB_API = "http://127.0.0.1:8000";
+// Render backend (set in .env locally and in Vercel env vars)
+const ENV_API = process.env.EXPO_PUBLIC_API_BASE;
 
-// ngrok tunnel for phones running Expo Go
-const MOBILE_API = "https://ned-plankless-nancie.ngrok-free.dev";
+// Local dev backend
+const LOCAL_API = "http://127.0.0.1:8000";
 
 
- // Pick base URL depending on platform.
- // intentionally ignore process.env here to remove ambiguity.
-const API_BASE = Platform.OS === "web" ? WEB_API : MOBILE_API;
+const API_BASE = ENV_API ?? LOCAL_API;
 
-// Helpful during debugging - confirms which URL the app is using
 console.log("API_BASE =", API_BASE);
 
-// Shared Axios instance 
 export const api = axios.create({
   baseURL: API_BASE,
   timeout: 8000,
