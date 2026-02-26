@@ -84,7 +84,7 @@ def get_current_staff_user(
 
 # Validation constants
 
-QUEUE_OPTIONS = set(range(5, 121, 5))
+QUEUE_OPTIONS = set(range(0, 121, 5))
 CAR_PARK_OPTIONS = {"Spaces Available", "Full", "Closed"}
 CLOSING_OPTIONS = {"17:00", "17:30", "18:00"}
 LAST_ADMISSION_OPTIONS = {"16:00", "16:30", "17:00"}
