@@ -2,7 +2,7 @@
   "expo": {
     "name": "Blarney Castle and Gardens",
     "slug": "BlarneyCastleandGardens",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "blarneynative",
