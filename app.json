@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "buildNumber": "21",
+      "buildNumber": "22",
       "supportsTablet": true,
       "infoPlist": {
         "CFBundleDisplayName": "Blarney Castle",
