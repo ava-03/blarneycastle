@@ -90,7 +90,7 @@ export default function HomeScreen() {
       setHasEverSucceeded(true); 
     } catch {
       // silent fail while server wakes
-      // keep pills spinning until success
+      // pills keep spinning until success
     }
   };
 
@@ -100,7 +100,7 @@ export default function HomeScreen() {
   useEffect(() => {
     mountedRef.current = true;
 
-    //  Fire immediately (but don't block UI rendering)
+    
     load();
 
     //  Retry every 30 seconds
@@ -123,8 +123,8 @@ export default function HomeScreen() {
     "https://blarneycastle.retailint-tickets.com/Event/GENERALADM";
 
   //  Pill values:
-  // - Before first success: "loading" (spinner)
-  // - After success: show value if present, otherwise "—"
+  // - Before first success: spinner
+  // - After success: shows value if available, otherwise "—"
   const queue = !hasEverSucceeded
     ? "loading"
     : data && typeof data.castle_queue_wait_mins === "number"
