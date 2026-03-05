@@ -31,6 +31,8 @@ REFERENCES:
 // https://reactnative.dev/docs/imagebackground
 // https://www.bing.com/videos/riverview/relatedvideo?q=setting+an+image+as+a+background+on+react+native+with+expo&&mid=DB861F2C03D1A6B6B2D7DB861F2C03D1A6B6B2D7&churl=https%3a%2f%2fwww.youtube.com%2fchannel%2fUCwJWXcI12lhcorzG7Vrf2zw&mmscn=mtsc&aps=28&FORM=VMSOVR
 // https://www.youtube.com/watch?v=czhLCGuu_AU&t=323s
+// https://www.bing.com/videos/riverview/relatedvideo?q=adding+loading+spinners+into+a+pill+for+expo+react+native&mid=39063DC2801CBCF88B6439063DC2801CBCF88B64&FORM=VIRE
+// https://www.bing.com/videos/riverview/relatedvideo?q=adding%20loading%20spinners%20into%20a%20pill%20for%20expo%20react%20native&mid=7FE8BB8FC4A57EB351B47FE8BB8FC4A57EB351B4&ajaxhist=0
 
 
 app/(tabs)/audio/index.tsx
