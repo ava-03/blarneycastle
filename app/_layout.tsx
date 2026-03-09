@@ -3,8 +3,16 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Platform } from "react-native";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
+
+// Conditionally import Analytics component for web platform only
+let Analytics: React.ComponentType | null = null;
+if (Platform.OS === "web") {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Analytics = require("@vercel/analytics/react").Analytics;
+}
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -21,6 +29,7 @@ export default function RootLayout() {
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
+      {Analytics && <Analytics />}
     </GestureHandlerRootView>
   );
 }
