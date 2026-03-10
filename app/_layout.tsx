@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Analytics } from "@vercel/analytics/react";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
@@ -20,6 +21,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
         </Stack>
         <StatusBar style="auto" />
+        <Analytics />
       </ThemeProvider>
     </GestureHandlerRootView>
   );
