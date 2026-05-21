@@ -93,9 +93,11 @@ FIXED_TICKETS_URL = "https://blarneycastle.retailint-tickets.com/Event/GENERALAD
 
 # Response/request models
 
+from typing import Literal
+
 class HomeStatus(BaseModel):
     tickets_url: str
-    castle_queue_wait_mins: int
+    castle_queue_wait_mins: int | Literal["Unknown", "N/A"]
     car_park_status: str
     closing_time: str
     last_admission: str
