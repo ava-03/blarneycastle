@@ -107,7 +107,7 @@ const THIRTY_MIN_ROUTE_PX: Px[] = [
   { x: 1931, y: 2056 },
   { x: 1942, y: 2118 },
   { x: 1998, y: 2163 },
-  { x: 2050, y: 2212 },
+  { x: 2050, y: 2212 }, 
   { x: 2122, y: 2169 },
   { x: 2181, y: 2222 },
   { x: 2279, y: 2307 },
@@ -146,11 +146,129 @@ const THIRTY_MIN_ROUTE_PX: Px[] = [
   { x: 3379, y: 1127 }, // End back near bridge
 ];
 
+const ONE_HOUR_ROUTE_PX: Px[] = [
+  { x: 3676, y: 851 }, // Entrance
+  { x: 3351, y: 1068 },
+  { x: 3368, y: 1093 },
+  { x: 3379, y: 1127 },
+  { x: 3290, y: 1221 },
+  { x: 3239, y: 1347 },
+  { x: 3173, y: 1539 },
+  { x: 3173, y: 1605 },
+  { x: 3098, y: 1619 },
+  { x: 3008, y: 1627 },
+  { x: 2957, y: 1623 },
+  { x: 2896, y: 1632 },
+  { x: 2847, y: 1641 },
+  { x: 2782, y: 1662 },
+  { x: 2701, y: 1671 },
+  { x: 2580, y: 1683 },
+  { x: 2517, y: 1716 },
+  { x: 2472, y: 1711 },
+  { x: 2403, y: 1716 },
+  { x: 2344, y: 1732 },
+  { x: 2284, y: 1731 },
+  { x: 2160, y: 1725 },
+  { x: 2063, y: 1715 },
+  { x: 1982, y: 1738 },
+  { x: 1908, y: 1768 },
+  { x: 1858, y: 1809 },
+  { x: 1874, y: 1897 },
+  { x: 1883, y: 1942 },
+  { x: 1907, y: 1984 },
+  { x: 1931, y: 2056 },
+  { x: 1942, y: 2118 },
+  { x: 1998, y: 2163 },
+  { x: 2050, y: 2212 },
+
+  { x: 1990, y: 2237 },
+  { x: 1802, y: 2312 },
+  { x: 1628, y: 2377 },
+  { x: 1672, y: 2541 },
+  { x: 1735, y: 2676 },
+  { x: 1767, y: 2681 },
+  { x: 1803, y: 2750 },
+  { x: 1828, y: 2825 },
+  { x: 1875, y: 2941 },
+  { x: 1914, y: 3047 },
+  { x: 1919, y: 3149 },
+  { x: 1896, y: 3247 },
+  { x: 1832, y: 3398 },
+  { x: 1826, y: 3500 },
+  { x: 1839, y: 3563 },
+  { x: 1893, y: 3751 },
+  { x: 1796, y: 3774 },
+  { x: 1689, y: 3779 },
+  { x: 1617, y: 3800 },
+  { x: 1643, y: 3940 },
+  { x: 1642, y: 3984 },
+  { x: 1637, y: 4009 },
+  { x: 1666, y: 4045 },
+  { x: 1684, y: 4082 },
+  { x: 1706, y: 4104 },
+  { x: 1711, y: 4160 },
+  { x: 1743, y: 4201 },
+  { x: 1775, y: 4270 },
+  { x: 1824, y: 4332 },
+  { x: 1869, y: 4431 },
+  { x: 1938, y: 4535 },
+  { x: 1955, y: 4576 },
+  { x: 1999, y: 4642 },
+  { x: 2032, y: 4710 },
+  { x: 2098, y: 4782 },
+  { x: 2186, y: 4831 },
+  { x: 2233, y: 4832 },
+  { x: 2343, y: 4851 },
+  { x: 2444, y: 4819 },
+  { x: 2589, y: 4765 },
+  { x: 2642, y: 4728 },
+  { x: 2725, y: 4649 },
+  { x: 2745, y: 4637 },
+  { x: 2764, y: 4616 },
+  { x: 2788, y: 4602 },
+  { x: 2861, y: 4528 },
+  { x: 2950, y: 4426 },
+  { x: 3027, y: 4312 },
+  { x: 3070, y: 4229 },
+  { x: 3143, y: 4141 },
+  { x: 3202, y: 4051 },
+  { x: 3242, y: 3970 },
+  { x: 3268, y: 3923 },
+  { x: 3284, y: 3823 },
+  { x: 3285, y: 3730 },
+  { x: 3257, y: 3674 },
+  { x: 3204, y: 3610 },
+  { x: 3152, y: 3526 }, // end of lake path
+
+  { x: 3252, y: 3490 },
+  { x: 3379, y: 3443 },
+  { x: 3444, y: 3427 },
+  { x: 3731, y: 3442 },
+  { x: 3845, y: 3441 }, // end of avenue
+
+  { x: 3827, y: 3285 },
+  { x: 3804, y: 3094 },
+  { x: 3768, y: 2806 },
+  { x: 3724, y: 2453 },
+  { x: 3686, y: 2135 },
+  { x: 3659, y: 1919 },
+  { x: 3646, y: 1823 },
+  { x: 3621, y: 1766 },
+  { x: 3685, y: 1604 },
+  { x: 3730, y: 1491 },
+  { x: 3779, y: 1392 },
+  { x: 3650, y: 1307 },
+  { x: 3531, y: 1231 },
+  { x: 3363, y: 1145 },
+  { x: 3364, y: 1140 },
+];
+
 export default function NavigationScreen() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showFastestRoute, setShowFastestRoute] = useState(false);
   const [showAccessibleRoute, setShowAccessibleRoute] = useState(false);
   const [showThirtyMinRoute, setShowThirtyMinRoute] = useState(false);
+  const [showOneHourRoute, setShowOneHourRoute] = useState(false);
   const [routesOpen, setRoutesOpen] = useState(false);
 
   const insets = useSafeAreaInsets();
@@ -167,6 +285,7 @@ export default function NavigationScreen() {
           showFastestRoute={showFastestRoute}
           showAccessibleRoute={showAccessibleRoute}
           showThirtyMinRoute={showThirtyMinRoute}
+          showOneHourRoute={showOneHourRoute}
         />
       </View>
 
@@ -251,6 +370,11 @@ export default function NavigationScreen() {
               <Text style={s.routeLabel}>30-Minute Loop</Text>
               <Text style={s.routeValue}>{showThirtyMinRoute ? "ON" : "OFF"}</Text>
             </Pressable>
+
+            <Pressable style={s.routeRow} onPress={() => setShowOneHourRoute((v) => !v)}>
+              <Text style={s.routeLabel}>1-Hour Loop</Text>
+              <Text style={s.routeValue}>{showOneHourRoute ? "ON" : "OFF"}</Text>
+            </Pressable>
           </View>
         )}
       </View>
@@ -262,10 +386,12 @@ function NavigationMap({
   showFastestRoute,
   showAccessibleRoute,
   showThirtyMinRoute,
+  showOneHourRoute,
 }: {
   showFastestRoute: boolean;
   showAccessibleRoute: boolean;
   showThirtyMinRoute: boolean;
+  showOneHourRoute: boolean;
 }) {
   const mapSource = require("../../../assets/images/bc-map.jpg");
 
@@ -413,6 +539,10 @@ function NavigationMap({
     return THIRTY_MIN_ROUTE_PX.map((p) => `${p.x * base.baseScale},${p.y * base.baseScale}`).join(" ");
   }, [base.baseScale]);
 
+  const oneHourRoutePoints = useMemo(() => {
+    return ONE_HOUR_ROUTE_PX.map((p) => `${p.x * base.baseScale},${p.y * base.baseScale}`).join(" ");
+  }, [base.baseScale]);
+
   return (
     <View
       style={s.mapCanvas}
@@ -485,6 +615,25 @@ function NavigationMap({
                   points={thirtyMinRoutePoints}
                   fill="none"
                   stroke="#3F51B5"
+                  strokeWidth={1.5}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                />
+              </Svg>
+            )}
+
+            {showOneHourRoute && (
+              <Svg
+                width="100%"
+                height="100%"
+                viewBox={`0 0 ${base.renderW} ${base.renderH}`}
+                style={s.svgOverlay}
+                pointerEvents="none"
+              >
+                <Polyline
+                  points={oneHourRoutePoints}
+                  fill="none"
+                  stroke="#FF6A00"
                   strokeWidth={1.5}
                   strokeLinejoin="round"
                   strokeLinecap="round"

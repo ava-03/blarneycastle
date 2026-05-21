@@ -119,18 +119,18 @@ export default function PhotosScreen() {
               <Text style={s.subTitle}>What to do:</Text>
               <Text style={s.bullet}>
                 • After kissing the Blarney Stone, photography staff will give you a
-                docket slip
+                docket slip.
               </Text>
               <Text style={s.bullet}>
-                • Show the docket at the photo kiosk counter to view your photo
+                • Show the docket at the photo kiosk counter to view your photo.
               </Text>
               <Text style={s.bullet}>
-                • You can choose to buy a physical print by itself, or with a digital copy
+                • You can choose to buy a physical print by itself, or with a digital copy.
               </Text>
               <Text style={s.bullet}>
                 • If you purchase a digital print, you will receive a DigiCopy receipt
                 with a code and pin. Click the tab below to enter your details and
-                download your print
+                download your print.
               </Text>
             </View>
 

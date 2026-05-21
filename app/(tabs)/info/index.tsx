@@ -264,6 +264,14 @@ export default function InfoScreen() {
                   "Which bus do I take back to Cork?",
                   "The 215 bus leaves from outside the church just off Blarney Square. Please check the latest timetables on the Bus Éireann website.",
                 ],
+                [
+                  "Is Blarney House open all year?",
+                  "Blarney House is open and accesible to visitors in the months of June, July and August.",
+                ],
+                [
+                  "Do you exchange currency?",
+                  "Yes, currency exchange is available in the gift shop.",
+                ],
               ].map(([q, a]) => (
                 <View key={q} style={s.qaBlock}>
                   <Text style={s.question}>Q. {q}</Text>
